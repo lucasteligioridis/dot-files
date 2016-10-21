@@ -1,0 +1,28 @@
+Host service.gateway.lexer.com.au gw
+Hostname service.gateway.lexer.com.au
+Port 122
+User lucast
+
+Host identities.gateway.lexer.com.au i_gw
+Hostname identities.gateway.lexer.com.au
+Port 122
+User lucast
+
+Host beta.gateway.lexer.com.au beta_gw
+Hostname beta.gateway.lexer.com.au
+Port 122
+User lucast
+
+Host dev.gateway.lexer.com.au dev_gw
+Port 22
+user lucast
+Hostname dev.gateway.lexer.com.au
+ForwardAgent yes
+
+Host vm
+User vagrant
+Hostname 127.0.0.1
+IdentityFile /Users/lucast/Projects/lexer-workdir/chef/.vagrant/machines/default/virtualbox/private_key
+Port 2222
+UserKnownHostsFile /dev/null
+StrictHostKeyChecking no
