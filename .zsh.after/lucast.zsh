@@ -9,20 +9,6 @@ export PROJECT_HOME=$HOME/Projects
 source /usr/local/bin/virtualenvwrapper.sh
 # Owner
 export USER_NAME="lucast"
-#eval "$(rbenv init -)"
-# FileSearch
-function f() { find . -iname "*$1*" ${@:2} }
-function r() { grep "$1" ${@:2} -R . }
-#mkdir and cd
-function mkcd() { mkdir -p "$@" && cd "$_"; }
-## Aliases ##
-alias cppcompile='c++ -std=c++11 -stdlib=libc++'
-alias git=hub
-# Git pull script
-alias gpa='/Users/lucast/Projects/lucas-workdir/scripts/git/git-pull-all.sh'
-# Use sublimetext for editing config files
-alias zshconfig="subl ~/.zprezto"
-alias envconfig="subl ~/Projects/config/env.sh"
 # Export Java home variable
 export JAVA_HOME=$(/usr/libexec/java_home)
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
@@ -43,8 +29,10 @@ bindkey "^X\\x7f" backward-kill-line
 # adds redo
 bindkey "^X^_" redo
 
+# forward and back a word
 bindkey "^[f" forward-word
 bindkey "^[b" backward-word
 
+# delete right of cursor
 bindkey "^[d" kill-word
 bindkey "^K" kill-line
