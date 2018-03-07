@@ -44,6 +44,8 @@
   d = diff                          # diff unstaged changes
   dc = diff --cached                # diff staged changes
   last = diff HEAD^                 # diff last committed change
+  lastall = diff origin/master..HEAD# diff all last committed changes
+  unpushed = !GIT_CURRENT_BRANCH=$(git name-rev --name-only HEAD) && git log origin/$GIT_CURRENT_BRANCH..$GIT_CURRENT_BRANCH --oneline
 
   # log
   l = log --graph --date=short
@@ -57,7 +59,10 @@
 
   # push
   ps = push                         # push
-  pp = !git pull --rebase && git push    # push and rebase
+  pp = !git pull --rebase && git push # push and rebase
+
+  # pull request
+  pr = ! sh -c '(git push origin (git symbolic-ref --short -q HEAD) && hub pull-request)'
 
   # rebase
   rc = rebase --continue            # continue rebase
@@ -65,7 +70,10 @@
 
   # remote
   r = remote -v                     # show remotes (verbose)
-
+  
+  # prune
+  fp = fetch origin --prune
+  
   # reset
   unstage = reset HEAD              # remove files from index (tracking)
   uncommit = reset --soft HEAD^     # go back before last commit, with files in uncommitted state
@@ -127,5 +135,3 @@
 [include]
   path = .gitconfig.user
 [user]
-	name = Lucas Teligioridis
-	email = lucas.teligioridis@gmail.com
