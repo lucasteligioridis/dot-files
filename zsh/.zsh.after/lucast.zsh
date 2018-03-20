@@ -1,3 +1,6 @@
+# Owner
+export USER_NAME="lucast"
+
 # PATH
 export PATH="/usr/local/share/python:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/home/lucast/bin"
 export EDITOR='vim'
@@ -9,9 +12,8 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 
 # Colors
 export TERM="xterm-256color"
+export GREP_COLORS='mt=01;31'
 
-# Owner
-export USER_NAME="lucast"
 
 # AWS Variables
 export EC2_HOME=~/.ec2
