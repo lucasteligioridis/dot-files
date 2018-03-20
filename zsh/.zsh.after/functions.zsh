@@ -22,6 +22,29 @@ function ter() {
   eval $cmd
 }
 
+# git
+function git_status() {
+  ORANGE='\033[1;31m'
+  NC='\033[0m'
+  BOLD='\033[1m'
+  local PROJECT=$(basename ${PWD})
+  local DEFAULT='master'
+  local UPSTREAM=${1:-${DEFAULT}}
+  local LOCAL=$(git rev-parse master)
+  local REMOTE=$(git ls-remote -h -t --quiet | grep master | tr  '\t'  '|' | cut -d "|" -f1)
+  local BASE=$(git merge-base master "${UPSTREAM}")
+  if [ ${LOCAL} = ${REMOTE} ]; then
+      echo -e "${BOLD}${PROJECT}:${NC} Up-to-date, no further action required."
+  elif [ ${LOCAL} = ${BASE} ]; then
+      echo -e "${BOLD}${ORANGE}${PROJECT}:${NC} Update required, pulling from remote..."
+      git ppm
+  elif [ ${REMOTE} = ${BASE} ]; then
+      echo -e "${BOLD}${PROJECT}:${NC} Push required"
+  else
+      echo -e "${BOLD}${PROJECT}:${NC} Diverged"
+  fi
+}
+
 # Download and install latest Terraform
 function dlterraform() {
   local version=${1}
