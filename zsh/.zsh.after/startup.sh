@@ -1,10 +1,13 @@
 #!/bin/bash
-# mount encrypted disk 
+##
+# add some mounting logic here
+##
 if [ ! -d ${HOME}/Encrypted/lucas ]; then
   read -s "pass?Enter passphrase to unlock disk: "
   echo
   printf "%s" "${pass}" | ecryptfs-add-passphrase
   mount.ecryptfs_private Encrypted
+  [ $? -eq 0 ] && MOUNTED=1
 fi
 
 # start ssh-agent automatically
@@ -29,23 +32,12 @@ else
     start_agent;
 fi
 
-# start our vpns
 function start_vpn() {
-  sudo ${HOME}/Encrypted/lucas/scripts/vpn/vpn.sh ${1}
+  for vpn in ops red; do
+    sudo systemctl is-active --quiet openvpn@${vpn}.service
+    if [ $? -ne 0 ]; then
+      echo -e "Starting ${vpn} openvpn service..."
+      sudo systemctl start openvpn@${vpn}.service
+    fi
+  done
 }
-
-function ping_gw() { ping -q -w 1 -c 1 $(ip r | grep default | cut -d ' ' -f 3) > /dev/null && return 0 || return 1 }
-if [ ping_gw ]; then
-  red=$(ps -ef | grep -Eo "open(.*)" | grep red | head -n 1)
-  ops=$(ps -ef | grep -Eo "open(.*)" | grep ops | head -n 1)
-  if [ -z ${ops} ]; then
-    echo -e "Starting operations vpn...\n"
-    start_vpn ops
-    echo -e "\n"
-  fi
-  if [ -z ${red} ]; then
-    echo -e "Starting redzone vpn...\n"
-    start_vpn red
-    echo -e "\n"
-  fi
-fi
