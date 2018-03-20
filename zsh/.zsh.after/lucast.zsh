@@ -14,7 +14,6 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 export TERM="xterm-256color"
 export GREP_COLORS='mt=01;31'
 
-
 # AWS Variables
 export EC2_HOME=~/.ec2
 export PATH=$PATH:$EC2_HOME/bin:~/.local/lib/aws/bin
@@ -33,9 +32,8 @@ export FZF_COMPLETION_TRIGGER='z'
 unsetopt correct_all
 unsetopt correct
 
-# 1password setup
-#export OP_SESSION_lexer="u-eJDfVLwnJFUkaFLXkguCHiibD7ILPdFrFoPU65H6o"
-#eval $(op signin lexer)
+# disable stupid zsh globbing
+setopt nonomatch
 
 # setup fasd
 eval "$(fasd --init auto)"
@@ -45,11 +43,8 @@ autoload -U compinit && compinit
 autoload bashcompinit && bashcompinit
 autoload -U history-search-end
 
-bindkey "^[[A" history-substring-search-up
-bindkey "^[[B" history-substring-search-down
-
 # ctrl-backspace delete word
-bindkey "^H" backward-kill-word
+bindkey "\C-h" backward-kill-word
 
 # ctrl-arrow keys
 bindkey "^[1;5A" "cd ..\n"
