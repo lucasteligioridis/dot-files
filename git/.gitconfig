@@ -58,8 +58,10 @@
   pl = pull                         # pull
 
   # push
-  ps = push                         # push
-  pp = !git pull --rebase && git push # push and rebase
+  sm  = !git ss --quiet && git co master --quiet
+  ppm  = !git ss --quiet && git co master --quiet && git pull --rebase --quiet && git co - --quiet && git ss pop --quiet # push
+  pp  = !git pull --rebase && git push # push and rebase
+  ppp = !git ss && git pull --rebase && git push && git ss pop # stash pull push pop
 
   # pull request
   pr = ! sh -c '(git push origin (git symbolic-ref --short -q HEAD) && hub pull-request)'
@@ -70,10 +72,10 @@
 
   # remote
   r = remote -v                     # show remotes (verbose)
-  
+
   # prune
   fp = fetch origin --prune
-  
+
   # reset
   unstage = reset HEAD              # remove files from index (tracking)
   uncommit = reset --soft HEAD^     # go back before last commit, with files in uncommitted state
@@ -135,3 +137,5 @@
 [include]
   path = .gitconfig.user
 [user]
+  name = Lucas Teligioridis
+  email = lucas.teligioridis@gmail.com
