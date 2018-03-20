@@ -88,20 +88,3 @@ function mkcd() { mkdir -p "$@" && cd "$_"; }
 #               | grep -v aptdaemon \
 #               | grep -E "^Commandline:"
 #}
-
-### TMUX
-function tab_colour() {
-  echo -ne "\033]6;1;bg;red;brightness;$1\a"
-  echo -ne "\033]6;1;bg;green;brightness;$2\a"
-  echo -ne "\033]6;1;bg;blue;brightness;$3\a"
-}
-function tab_reset() {
-  echo -ne "\033]6;1;bg;*;default\a"
-}
-
-# Set the tab colour to yellow (or green if tmux)
-if [ $TMUX ]; then
-  tab_colour 110 221 76
-else
-  tab_colour 255 200 46
-fi
