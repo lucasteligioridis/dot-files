@@ -25,7 +25,9 @@ zstyle ':prezto:*:*' color 'yes'
 # The order matters.
 zstyle ':prezto:load' pmodule \
   'terminal' \
+  'environment' \
   'history' \
+  'spectrum' \
   'utility' \
   'completion' \
   'git' \
@@ -33,10 +35,6 @@ zstyle ':prezto:load' pmodule \
   'history-substring-search' \
   'contrib-prompt' \
   'prompt'
-
-#
-# Editor
-#
 
 # Set the key mapping style to 'emacs' or 'vi'.
 zstyle ':prezto:module:editor' key-bindings 'emacs'
@@ -105,10 +103,12 @@ zstyle ':prezto:module:ssh-agent' forwarding 'yes'
 
 # Set syntax highlighters.
 # By default main, brackets, and cursor are enabled.
+zstyle ':prezto:module:syntax-highlighting' color 'yes'
 zstyle ':prezto:module:syntax-highlighting' highlighters \
   'main' \
   'brackets' \
   'pattern' \
+  'line' \
   'cursor' \
   'root'
 
@@ -130,5 +130,5 @@ zstyle ':prezto:module:terminal' auto-title 'yes'
 #
 # History
 #
-#zstyle ':prezto:module:history-substring-search' color 'yes'
+zstyle ':prezto:module:history-substring-search' color 'yes'
 
