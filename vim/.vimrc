@@ -14,7 +14,28 @@ set expandtab " tabs -> spaces
 set tabstop=2
 set wrap
 
+" bash like tab completion
+set wildmode=longest,list,full
+set wildmenu
+
+" nuke all trailing space before a write
+au BufWritePre * :%s/\s\+$//e
+
+" permanent undo history of files
+let s:undoDir = "/home/lucast/.vim/undo"
+let &undodir=s:undoDir
+set undofile
+
 " Shorctuts & key bindings --------------------------------
+
+" move entire pane one line at a time
+map <S-Up> <C-y>
+map <S-Down> <C-e>
+inoremap <S-Up> <C-x><C-y>
+inoremap <S-Down> <C-x><C-e>
+
+" re-launch vim as sudo
+cmap w!! w !sudo tee % >/dev/null
 
 " Move across panes
 map <S-M-Left>  <C-W><left>
