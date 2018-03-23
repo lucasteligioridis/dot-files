@@ -1,4 +1,4 @@
-#alias git=hub
+alias chromium='command chromium --audio-buffer-size=2048'
 alias ls='ls --color=auto --group-directories-first'
 alias genpasswd="strings /dev/urandom | grep -o '[[:alnum:]]' | head -n 30 | tr -d '\n'; echo"
 alias tree="ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'"
