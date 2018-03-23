@@ -26,3 +26,6 @@ set convert-meta off
 # ctrl keys
 "\e[1;5C": forward-word
 "\e[1;5D": backward-word
+
+# backwards kill word
+"": backward-kill-word
