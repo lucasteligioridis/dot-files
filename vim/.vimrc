@@ -34,6 +34,10 @@ map <S-Down> <C-e>
 inoremap <S-Up> <C-x><C-y>
 inoremap <S-Down> <C-x><C-e>
 
+" Map Ctrl-Backspace to delete the previous word in insert mode.
+map   <C-W>
+imap  <C-W>
+
 " re-launch vim as sudo
 cmap w!! w !sudo tee % >/dev/null
 
