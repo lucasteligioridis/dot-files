@@ -5,6 +5,9 @@ set show-all-if-unmodified on
 set show-all-if-ambiguous on
 set visible-stats on
 
+# case insensitve auto completion
+set completion-ignore-case On
+
 # ask before showing >200 results
 set completion-query-items 200
 
