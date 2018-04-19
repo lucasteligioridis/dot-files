@@ -59,9 +59,9 @@
 
   # push
   sm  = !git ss --quiet && git co master --quiet
-  ppm  = !git ss --quiet && git co master --quiet && git pull --rebase --quiet && git co - --quiet && git ss pop --quiet # push
-  pp  = !git pull --rebase && git push # push and rebase
-  ppp = !git ss && git pull --rebase && git push && git ss pop # stash pull push pop
+  ppm  = !git ss --quiet && git co master --quiet && git pull --quiet && git co - --quiet && git ss pop --quiet # push
+  pp  = !git pull && git push # push and rebase
+  ppp = !git ss && git pull && git push && git ss pop # stash pull push pop
 
   # pull request
   pr = ! sh -c '(git push origin (git symbolic-ref --short -q HEAD) && hub pull-request)'
