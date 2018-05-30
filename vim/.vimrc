@@ -153,9 +153,3 @@ autocmd FileType rb   setlocal autoindent expandtab   tabstop=2 shiftwidth=2
 autocmd FileType sh   setlocal autoindent expandtab   tabstop=2 shiftwidth=2
 autocmd FileType zsh  setlocal autoindent expandtab   tabstop=2 shiftwidth=2
 autocmd FileType make setlocal autoindent noexpandtab tabstop=2 shiftwidth=2
-
-" OSX - edit crontab files
-"if $VIM_CRONTAB == "true"
-"    set nobackup
-"    set nowritebackup
-"endif
