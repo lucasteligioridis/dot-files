@@ -6,7 +6,7 @@ syntax on
 syntax enable
 filetype plugin indent on
 set mouse=a
-set clipboard=unnamed
+set clipboard=unnamedplus
 
 " very basic editor behaviour
 set number    " line numbers
@@ -20,6 +20,9 @@ set wildmenu
 
 " nuke all trailing space before a write
 au BufWritePre * :%s/\s\+$//e
+
+" set underscore as a word boundary
+set iskeyword-=_
 
 " permanent undo history of files
 let s:undoDir = "/home/lucast/.vim/undo"
@@ -97,6 +100,9 @@ autocmd vimenter * if !argc() | NERDTree | endif
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 map <C-B> :NERDTreeFocus<CR>
 noremap <C-Bslash> :NERDTreeToggle<CR>
+
+" Show hidden files
+let NERDTreeShowHidden=1
 
 " Disable editor mode in default bar
 set noshowmode
