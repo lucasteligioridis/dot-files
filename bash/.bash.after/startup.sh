@@ -34,10 +34,7 @@ fi
 
 function start_vpn() {
   for vpn in ops red; do
-    sudo systemctl is-active --quiet openvpn@${vpn}.service
-    if [ $? -ne 0 ]; then
-      echo -e "Starting ${vpn} openvpn service..."
-      sudo systemctl start openvpn@${vpn}.service
-    fi
+    echo -e "Starting ${vpn} openvpn service..."
+    sudo systemctl restart openvpn@${vpn}.service
   done
 }
