@@ -152,6 +152,11 @@ let g:terraform_fold_sections=1
 let g:terraform_remap_spacebar=1
 autocmd FileType terraform setlocal commentstring=//%s
 
+" Ansible
+" let g:ansible_attribute_highlight = "ob"
+let g:ansible_unindent_after_newline = 1
+let g:ansible_extra_keywords_highlight = 1
+
 " Language-specific formatting
 autocmd FileType go   setlocal autoindent noexpandtab tabstop=4 shiftwidth=4
 autocmd FileType py   setlocal autoindent expandtab   tabstop=4 shiftwidth=4
