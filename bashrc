@@ -1,4 +1,4 @@
-# aliases
+# Aliases --------------------------
 alias chromium='command chromium --audio-buffer-size=2048'
 alias ls='ls --color=auto --group-directories-first'
 alias genpasswd="strings /dev/urandom | grep -o '[[:alnum:]]' | head -n 30 | tr -d '\n'; echo"
@@ -9,7 +9,16 @@ alias v="f -e vim" # quick opening files with vim
 alias show_apt_installs='( zcat $( ls -tr /var/log/apt/history.log*.gz ) ; cat /var/log/apt/history.log ) | grep -E "^(Start-Date:|Commandline:)" | grep -v aptdaemon | grep -E "^Commandline:"'
 alias rvim='sudo -E vim'
 
-# functions
+# Functions -----------------------
+function start_agent {
+    echo "Initialising new SSH agent..."
+    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+    echo succeeded
+    chmod 600 "${SSH_ENV}"
+    source "${SSH_ENV}" > /dev/null
+    /usr/bin/ssh-add;
+}
+
 function sshc() {
   ssh-keygen -f "${HOME}/.ssh/known_hosts" -R ${1}
   ssh -o StrictHostKeyChecking=no ${1}
@@ -19,7 +28,6 @@ function replace() {
   grep -rsl "${1}" * | tee /dev/stderr | xargs sed -i "s^${1}^${2}^g"
 }
 
-### TERRAFORM
 function ter() {
   case ${1} in
     "plan")  shift; cmd="terraform init && terraform plan -parallelism=100 ${@}";;
@@ -33,7 +41,6 @@ function ter() {
   eval $cmd
 }
 
-# git
 function git_status() {
   ORANGE='\033[1;31m'
   NC='\033[0m'
@@ -56,24 +63,6 @@ function git_status() {
   fi
 }
 
-# Download and install latest Terraform
-function dlterraform() {
-  local version=${1}
-  zip="terraform_${version}_linux_amd64.zip"
-  url="https://releases.hashicorp.com/terraform/${version}/${zip}"
-
-  if [ ! -z ${version} ] ; then
-    (
-      cd ${HOME}/bin && \
-      wget "${url}" && \
-      unzip -o ${zip} && \
-      rm ${zip}
-    )
-  else
-    echo "Please input version number you wish to download for Terraform"
-  fi
-}
-
 # Backup file in same dir
 function backup() { cp "${1}"{,.bak}; }
 
@@ -93,36 +82,38 @@ function sgrep() { grep -rsi ${1} *; }
 # mkdir and cd
 function mkcd() { mkdir -p "$@" && cd "$_"; }
 
-# Custom
+# Exports --------------------------------
+
 # Owner
 export USER_NAME="lucast"
 
 # PATH
-export PATH="/usr/local/share/python:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/home/lucast/bin"
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/home/lucast/bin"
 export EDITOR='vim'
 export VISUAL='vim'
 
-# Colors
-export TERM="xterm-256color"
+# Term
+export TERM="tmux"
+#export TERM="xterm-256color"
 #export TERM="screen-256color"
+
+# Grep colours
 export GREP_COLORS='mt=01;31'
 
 # export go path
-export GOPATH=$HOME/go
-export PATH=$PATH:$GOPATH/bin
+export GOROOT=$HOME/go
+export GOPATH=$HOME/goprojects
+export PATH=$PATH:$GOROOT/bin:$GOPATH
 
 # AWS Variables
 export EC2_URL=https://ap-southeast-2.ec2.amazonaws.com
 export AWS_REGIONS="ap-southeast-2 us-west-2"
 
-# Use ~~ as the trigger sequence instead of the default **
+# Change the default completion trigger
 export FZF_COMPLETION_TRIGGER='z'
 
 # setup fasd
 eval "$(fasd --init auto)"
-
-# enable some completions
-source /usr/share/bash-completion/completions/git
 
 # setup pyenv environment paths
 export PYENV_ROOT="$HOME/.pyenv"
@@ -134,7 +125,7 @@ if command -v pyenv 1>/dev/null 2>&1; then
 fi
 
 # autocomplete targets in Makefile
-[ -f Makefile ] && complete -W "\$(grep -oE '^[a-zA-Z0-9_.-]+:([^=]|$)' Makefile | sed 's/[^a-zA-Z0-9_.-]*$//'\)" make
+[ -f Makefile ] && complete -W "$(grep -oE '^[a-zA-Z0-9_-]+:([^=]|$)' Makefile | sed 's/[^a-zA-Z0-9_-]*$//')" make
 
 # disable software flow control
 stty -ixon
@@ -142,26 +133,17 @@ stty -ixon
 # start ssh-agent automatically
 SSH_ENV="$HOME/.ssh/environment"
 
-function start_agent {
-    echo "Initialising new SSH agent..."
-    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
-    echo succeeded
-    chmod 600 "${SSH_ENV}"
-    source "${SSH_ENV}" > /dev/null
-    /usr/bin/ssh-add;
-}
-
 # Source SSH settings, if applicable
 if [ -f "${SSH_ENV}" ]; then
-    source "${SSH_ENV}" > /dev/null
-    ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
-        start_agent;
-    }
-else
+  source "${SSH_ENV}" > /dev/null
+  ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
     start_agent;
+  }
+else
+  start_agent;
 fi
 
-# Prompt
+# Prompt ----------------------------
 NC="\001\e[0m\002"
 BOLD="\001\e[1m\002"
 ORANGE="\001\e[38;5;214m\002"
