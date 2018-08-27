@@ -1,12 +1,134 @@
-" package manager
-execute pathogen#infect()
+" ============================================================================
+" Vim-plug initialization
+
+let vim_plug_just_installed = 0
+let vim_plug_path = expand('~/.config/nvim/autoload/plug.vim')
+if !filereadable(vim_plug_path)
+    echo "Installing Vim-plug..."
+    echo ""
+    silent !mkdir -p ~/.config/nvim/autoload
+    silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    let vim_plug_just_installed = 1
+endif
+
+" manually load vim-plug the first time
+if vim_plug_just_installed
+    :execute 'source '.fnameescape(vim_plug_path)
+endif
+
+" ============================================================================
+" Active plugins
+
+" this needs to be here, so vim-plug knows we are declaring the plugins we
+" want to use
+call plug#begin('~/.local/share/nvim/plugged')
+
+" Autocomplete
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+
+" Python autocomplete
+Plug 'davidhalter/jedi-vim'
+Plug 'zchee/deoplete-jedi'
+
+" Shougo deoplete prereqs
+Plug 'Shougo/neco-vim'
+Plug 'Shougo/neosnippet.vim'
+
+" Code commenter
+Plug 'scrooloose/nerdcommenter'
+
+" File browswer
+Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+
+" Better language packs
+Plug 'sheerun/vim-polyglot'
+
+" Tab
+Plug 'ervandew/supertab'
+Plug 'godlygeek/tabular'
+
+" Syntax checker
+Plug 'vim-syntastic/syntastic'
+
+" Snippets
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'Shougo/neosnippet-snippets'
+
+" Git plugins
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+
+" Go syntax
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries'  }
+
+" Grammar checker
+Plug 'rhysd/vim-grammarous'
+
+" Json syntax
+Plug 'elzr/vim-json'
+
+" Surround
+Plug 'tpope/vim-surround'
+
+" Automatically sort python imports
+Plug 'fisadev/vim-isort'
+
+" Terraform
+Plug 'hashivim/vim-terraform'
+Plug 'Raimondi/delimitMate'
+
+" Docker
+Plug 'ekalinin/Dockerfile.vim'
+
+" Theme
+Plug 'joshdick/onedark.vim'
+Plug 'ryanoasis/vim-devicons'
+
+" Airline
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+" Fuzzy searchers
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'wincent/command-t', { 'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make' }
+
+" Tmux completer
+Plug 'wellle/tmux-complete.vim'
+
+" Async completer
+Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/asyncomplete.vim'
+
+" Linters
+Plug 'neomake/neomake'
+
+" Tell vim-plug we finished declaring plugins, so it can load them
+call plug#end()
+
+" ============================================================================
+" Install plugins the first time vim runs
+
+if vim_plug_just_installed
+    echo "Installing Bundles, please ignore key map error messages"
+    :PlugInstall
+endif
+
+" ============================================================================
+" Bootstrap configuration
 
 " global variables to enable plugins
 syntax on
 syntax enable
 filetype plugin on
 filetype plugin indent on
+
+" enable mouse
 set mouse=a
+
+" use system clipboard
 set clipboard=unnamed
 set clipboard=unnamedplus
 
