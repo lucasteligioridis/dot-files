@@ -141,12 +141,15 @@ set wrap
 " bash like tab completion
 set wildmode=longest,list,full
 set wildmenu
+set wildignore+=*.pyc,*.o,*.obj,*.svn,*.swp,*.class,*.hg,*.DS_Store,*.min.*,*.git,__pycache__
 
 " nuke all trailing space before a write
 au BufWritePre * :%s/\s\+$//e
 
-" set underscore and dash as a word boundary
-set iskeyword-=_
+" put cursor back where it was last time when re-opening a file
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+" set dash as a word boundary
 set iskeyword-=-
 
 " permanent undo history of files
@@ -159,10 +162,23 @@ set backup
 set backupdir=/home/lucast/.vim/tmp/
 set dir=/home/lucast/.vim/tmp/
 
-" Shorctuts & key bindings --------------------------------
+" fuzzy completion
+set rtp+=/.fzf
 
-" put cursor back where it was last time when re-opening a file
-au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+" set utf8 encoding by default
+set encoding=utf8
+
+" Grammar checking
+let g:grammarous#default_comments_only_filetypes = {
+            \ '*' : 1, 'help' : 0, 'markdown' : 0,
+            \ }
+
+" ============================================================================
+" Shorctuts & key bindings
+
+if !has('nvim')
+	set ttymouse=xterm2
+endif
 
 " Remap leader key
 let mapleader = ","
@@ -173,7 +189,7 @@ map <S-Down> <C-e>
 inoremap <S-Up> <C-x><C-y>
 inoremap <S-Down> <C-x><C-e>
 
-" Map Ctrl-Backspace to delete the previous word in insert mode.
+" Map Ctrl-Backspace to delete the previous word in insert mode
 map  <C-W>
 imap  <C-W>
 map <C-BS> <C-W>
@@ -223,7 +239,6 @@ cmap q1<CR> q!<CR>
 cmap Wq<CR> wq<CR>
 map Y y$
 map Q :q<CR>
-map W :w<CR>
 
 " quit and save shortcuts
 map <C-d> :q!<CR>
@@ -242,6 +257,12 @@ map <C-f> :CommandT<CR>
 " Paste below line
 nmap <F4> o<ESC>p
 
+" clear highlight on esc
+nnoremap <esc> :noh<return><esc>
+
+" ============================================================================
+" Tmux
+
 " tmux and vim combination
 if &term =~ '^screen'
     " tmux will send xterm-style keys when its xterm-keys option is on
@@ -251,25 +272,37 @@ if &term =~ '^screen'
     execute "set <xLeft>=\e[1;*D"
 endif
 
-" fuzzy completion
-set rtp+=/.fzf
+" autocomplete
+if exists('$TMUX')
+    " Tmux completion (with tmux-complete plugin)
+    let g:tmuxcomplete#trigger = ''
+endif
 
-" COLOURS AND TMUX
+" ============================================================================
+" Colours and themes
+
 if (has("termguicolors"))
     set termguicolors
 endif
 
+" Enable 256 colours
 set background=dark
 set t_Co=256
 
 " Color scheme
 colorscheme onedark
 
-" NERDTree settings, open NERDTree by default
+" ============================================================================
+" Interface
+
+" NERDTree ----------------------------------
 autocmd vimenter * if !argc() | NERDTree | endif
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 map <C-B> :NERDTreeFocus<CR>
 noremap <C-Bslash> :NERDTreeToggle<CR>
+syn match NERDTreeTxtFile #^\s\+.*txt$#
+highlight NERDTreeTxtFile ctermbg=red ctermfg=magenta
+let NERDTreeRespectWildIgnore=1
 
 " Show hidden files
 let NERDTreeShowHidden=1
@@ -288,24 +321,58 @@ if has("multi_byte")
   set fileencodings=ucs-bom,utf-8,latin1
 endif
 
-" Required
-set encoding=utf8
-
-" Status bar and devicon settings
+" Airline -----------------------------
 let g:airline_powerline_fonts = 1
 let g:webdevicons_enable_airline_statusline = 1
 let g:webdevicons_enable_airline_tabline = 1
 let g:WebDevIconsNerdTreeAfterGlyphPadding = '  '
 
-syn match NERDTreeTxtFile #^\s\+.*txt$#
-highlight NERDTreeTxtFile ctermbg=red ctermfg=magenta
+" Line number -------------------------
+set number
+set relativenumber
+set cursorline
 
-" enable syntax checking
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+" ============================================================================
+" Autocomplete
 
-" Syntastic
+" Python -------------------------------
+let g:python3_host_prog = '/home/lucast/.pyenv/versions/3.6.4/bin/python3'
+
+" Deoplete -----------------------------
+
+" Use deoplete.
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_ignore_case = 1
+let g:deoplete#enable_smart_case = 1
+set pumheight=15
+set completeopt=menuone,noinsert
+call deoplete#custom#source('ultisnips', 'rank', 1000)
+call deoplete#custom#source('ultisnips', 'min_pattern_length', 1)
+call deoplete#custom#source('buffer', 'max_menu_width', 90)
+call deoplete#custom#source('dictionary', 'min_pattern_length', 1)
+call deoplete#custom#source('dictionary', 'rank', 1000)
+
+" Mappings
+" Close popup and delete backward character
+inoremap <expr><BS> deoplete#smart_close_popup()."\<BS>"
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+"inoremap <expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
+
+" Jedi-vim ------------------------------
+
+" Disable autocompletion (using deoplete instead)
+let g:jedi#completions_enabled = 0
+let deoplete#sources#jedi#show_docstring = 1
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <expr> <C-n> pumvisible() ? '<C-n>' :
+  \ '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
+inoremap <expr> <M-,> pumvisible() ? '<C-n>' :
+  \ '<C-x><C-o><C-n><C-p><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
+
+" ============================================================================
+" Syntax highlighting and linting
+
+" Syntastic ------------------------------
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
@@ -313,51 +380,28 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_python_flake8_exec = 'python'
 let g:syntastic_python_flake8_args = ['-m', 'flake8']
 
-" Line numbers
-set number
-set relativenumber
+" enable syntax checking
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
 
-" Neocomplete
-" Use deoplete.
-let g:deoplete#enable_at_startup = 1
-" Enable autocompletion
-let g:neocomplete#enable_at_startup = 1
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-let g:neocomplete#enable_smart_case = 1
-" Set minimum syntax keyword length.
-let g:neocomplete#sources#syntax#min_keyword_length = 3
-
-" AWS
+" AWS ------------------------------
 let g:AWSVimValidate = 1
 let g:UltiSnipsSnippetDirectories=["UltiSnips", "./bundle/aws-vim/snips"]
 let g:AWSSnips = "Alarm Authentication Base64 CreationPolicy FindInMap GetAtt Init Instance InstanceProfile Join LaunchConfiguration LoadBalancer Param Policy RDSIngress Ref Role SGEgress SGIngress ScalingPolicy ScheduledAction SecurityGroup Select Stack Subnet VPC Volume VolumeAttachment WaitCondition WaitConditionHandle asg cft init_command init_file init_group init_user"
-au BufRead,BufNewFile *.parameters setlocal filetype=json
-au BufRead,BufNewFile *.tags       setlocal filetype=json
-au BufRead,BufNewFile *.template   setlocal filetype=yaml
 
-" Terraform
+" Terraform -------------------------
 let g:terraform_align=1
 let g:terraform_fold_sections=1
 let g:terraform_remap_spacebar=1
 autocmd FileType terraform setlocal commentstring=//%s
-au BufRead,BufNewFile *.tf      setlocal filetype=terraform
-au BufRead,BufNewFile *.tfvars  setlocal filetype=terraform
-au BufRead,BufNewFile *.tfstate setlocal filetype=javascript
 
-" Docker
-au BufRead,BufNewFile Dockerfile.* setlocal filetype=dockerfile
-
-" Ansible
+" Ansible ---------------------------
 " let g:ansible_attribute_highlight = "ob"
 let g:ansible_unindent_after_newline = 1
 let g:ansible_extra_keywords_highlight = 1
 
-" Grammar checking
-let g:grammarous#default_comments_only_filetypes = {
-            \ '*' : 1, 'help' : 0, 'markdown' : 0,
-            \ }
-
+" File extension --------------------
 " Language-specific formatting
 autocmd FileType go   setlocal autoindent noexpandtab tabstop=4 shiftwidth=4
 autocmd FileType py   setlocal autoindent expandtab   tabstop=4 shiftwidth=4
@@ -367,11 +411,11 @@ autocmd FileType zsh  setlocal autoindent expandtab   tabstop=2 shiftwidth=2
 autocmd FileType make setlocal autoindent noexpandtab tabstop=2 shiftwidth=2
 autocmd FileType yaml setlocal autoindent expandtab   tabstop=2 shiftwidth=2
 
-" omni autocompletions per-language
-autocmd FileType python     set omnifunc=python3complete#Complete
-autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python     set foldlevel=1
-autocmd FileType html       set omnifunc=htmlcomplete#CompleteTags
-autocmd FileType css        set omnifunc=csscomplete#CompleteCSS
-autocmd FileType xml        set omnifunc=xmlcomplete#CompleteTags
-autocmd FileType php        set omnifunc=phpcomplete#CompletePHP
+" File type formatting
+au BufRead,BufNewFile *.tf         setlocal filetype=terraform
+au BufRead,BufNewFile *.tfvars     setlocal filetype=terraform
+au BufRead,BufNewFile *.tfstate    setlocal filetype=javascript
+au BufRead,BufNewFile *.parameters setlocal filetype=json
+au BufRead,BufNewFile *.tags       setlocal filetype=json
+au BufRead,BufNewFile *.template   setlocal filetype=yaml
+au BufRead,BufNewFile Dockerfile.* setlocal filetype=dockerfile
