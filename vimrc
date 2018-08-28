@@ -260,6 +260,10 @@ nmap <F4> o<ESC>p
 " clear highlight on esc
 nnoremap <esc> :noh<return><esc>
 
+" swap semi-colon for cmd mode
+nnoremap ; :
+nnoremap : ;
+
 " ============================================================================
 " Tmux
 
