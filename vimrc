@@ -301,8 +301,7 @@ set t_Co=256
 colorscheme onedark
 
 " Highlight past 80 character
-"highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-"match OverLength /\%81v.\+/
+autocmd BufWinEnter * match ErrorMsg /\%>79v.\%<82v/
 
 " ============================================================================
 " Interface
