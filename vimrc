@@ -259,12 +259,14 @@ map <C-f> :CommandT<CR>
 " Paste below line
 nmap <F4> o<ESC>p
 
+" Grammar checker
+nmap <F5> :GrammarousCheck<return>
+
 " clear highlight on esc
 nnoremap <esc> :noh<return><esc>
 
 " swap semi-colon for cmd mode
-nnoremap ; :
-nnoremap : ;
+nmap ; :
 
 " ============================================================================
 " Tmux
