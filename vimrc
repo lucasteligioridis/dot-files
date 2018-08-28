@@ -168,10 +168,17 @@ set rtp+=/.fzf
 " set utf8 encoding by default
 set encoding=utf8
 
+" set some tab highlighting
+set showtabline=2
+set tabpagemax=500
+highlight TabLine       ctermfg=green ctermbg=None cterm=None
+highlight TabLineFill   ctermfg=white ctermbg=None cterm=None
+highlight TabLineSel    ctermfg=202
+
 " Grammar checking
-let g:grammarous#default_comments_only_filetypes = {
-            \ '*' : 1, 'help' : 0, 'markdown' : 0,
-            \ }
+" let g:grammarous#default_comments_only_filetypes = {
+"             \ '*' : 1, 'help' : 0, 'markdown' : 0,
+"             \ }
 
 " ============================================================================
 " Shorctuts & key bindings
@@ -216,11 +223,6 @@ imap <S-Left>  <Esc>:tabp<CR>
 map  <S-Left>  <Esc>:tabp<CR>
 imap <S-Right> <Esc>:tabn<CR>
 map  <S-Right> <Esc>:tabn<CR>
-set showtabline=2
-set tabpagemax=500
-highlight TabLine       ctermfg=green ctermbg=None cterm=None
-highlight TabLineFill   ctermfg=white ctermbg=None cterm=None
-highlight TabLineSel    ctermfg=202
 
 function! SuperTab()
     if (strpart(getline('.'),col('.')-2,1)=~'^\W\?$')
