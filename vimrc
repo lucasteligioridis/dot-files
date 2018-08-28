@@ -296,6 +296,10 @@ set t_Co=256
 " Color scheme
 colorscheme onedark
 
+" Highlight past 80 character
+"highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+"match OverLength /\%81v.\+/
+
 " ============================================================================
 " Interface
 
