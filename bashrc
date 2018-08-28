@@ -50,7 +50,6 @@ function sgrep() { grep -rsi ${1} *; }
 export PATH="${PATH}:${HOME}/bin:${HOME}/.local/bin"
 export EDITOR='vim'
 export VISUAL='vim'
-export TERM="xterm-256color"
 export GREP_COLORS='mt=01;31'
 export GOROOT=${HOME}/go
 export GOPATH=${HOME}/goprojects
