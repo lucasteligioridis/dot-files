@@ -23,6 +23,9 @@ endif
 " want to use
 call plug#begin('~/.local/share/nvim/plugged')
 
+" Vim HardTime
+Plug 'takac/vim-hardtime'
+
 " Autocomplete
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
@@ -179,6 +182,9 @@ highlight TabLineSel    ctermfg=202
 " let g:grammarous#default_comments_only_filetypes = {
 "             \ '*' : 1, 'help' : 0, 'markdown' : 0,
 "             \ }
+
+" Enable hard modeline
+let g:hardtime_default_on = 1
 
 " ============================================================================
 " Shorctuts & key bindings
