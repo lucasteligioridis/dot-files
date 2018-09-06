@@ -393,8 +393,10 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+let g:syntastic_sh_shellcheck_args = "-x"
 let g:syntastic_python_flake8_exec = 'python'
 let g:syntastic_python_flake8_args = ['-m', 'flake8']
+let g:syntastic_filetype_map = {"Dockerfile": "dockerfile"}
 
 " enable syntax checking
 set statusline+=%#warningmsg#
