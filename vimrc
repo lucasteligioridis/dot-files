@@ -249,8 +249,8 @@ map Y y$
 map Q :q<CR>
 
 " quit and save shortcuts
-map <C-d> :q!<CR>
-imap <C-d> <Esc>:q!<CR>
+"map <C-d> :q!<CR>
+"imap <C-d> <Esc>:q!<CR>
 map <C-s> :w!<CR>
 imap <C-s> <ESC>:w!<CR>
 map <Space> i
@@ -315,7 +315,6 @@ autocmd BufWinEnter * match ErrorMsg /\%>79v.\%<82v/
 " NERDTree ----------------------------------
 autocmd vimenter * if !argc() | NERDTree | endif
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
-map <C-B> :NERDTreeFocus<CR>
 noremap <C-Bslash> :NERDTreeToggle<CR>
 syn match NERDTreeTxtFile #^\s\+.*txt$#
 highlight NERDTreeTxtFile ctermbg=red ctermfg=magenta
