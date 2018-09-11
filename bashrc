@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Aliases --------------------------
 alias sssh="ssh -q -o BatchMode=yes -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -t"
 alias chromium="command chromium --audio-buffer-size=2048"
@@ -11,24 +13,32 @@ alias show_apt_installs='( zcat $( ls -tr /var/log/apt/history.log*.gz ) ; cat /
 alias rvim='sudo -E vim'
 
 # Functions -----------------------
+function sudo() {
+  if [[ ${1} == "vim" ]]; then
+    shift; command sudo -E vim "${@}"
+  else
+    command sudo "${@}"
+  fi
+}
+
 function replace() {
-  grep -rsl "${1}" * | tee /dev/stderr | xargs sed -i "s|${1}|${2}|g"
+  grep -rsl "${1}" -- * | tee /dev/stderr | xargs sed -i "s|${1}|${2}|g"
 }
 
 function ter() {
   case ${1} in
-    "plan")  shift; terraform init && terraform plan -parallelism=100 ${@};;
-    "apply") shift; terraform init && terraform apply -auto-approve -parallelism=100 ${@};;
+    "plan")  shift; terraform init && terraform plan -parallelism=100 "${@}";;
+    "apply") shift; terraform init && terraform apply -auto-approve -parallelism=100 "${@}";;
     "dns")   grep fqdn terraform.tfstate | awk '{print $2}' | tr -d '"' | tr -d ',';;
     "ls")    terraform show | grep -E '^[a-zA-Z]' | tr -d ':';;
-    "sg")    for i in $(grep -E '"sg-(.*)' terraform.tfstate | awk '{print $2}' | sort -u | tr -d '"' | tr -d ','); do echo $i $(aws cache $i); done;;
+    "sg")    for i in $(grep -E '"sg-(.*)' terraform.tfstate | awk '{print $2}' | sort -u | tr -d '"' | tr -d ','); do echo "${i}" "$(aws cache "$i")"; done;;
     *)       command terraform "${@}";;
   esac
 }
 
 function aws() {
   case ${1} in
-    "cache") shift; grep $1 /tmp/.awscache | awk '{print $2}';;
+    "cache") shift; grep "$1" /tmp/.awscache | awk '{print $2}';;
     *) command aws "${@}";;
   esac
 }
@@ -42,9 +52,9 @@ function sbs() {
 }
 
 # FileSearch
-function sfind() { find . -iname "*${1}*" ${@:2}; }
-function rgrep() { grep "${1}" ${@:2} -R .; }
-function sgrep() { grep -rsi ${1} *; }
+function sfind() { find . -iname "*${1}*" "${@:2}"; }
+function rgrep() { grep "${1}" "${@:2}" -R .; }
+function sgrep() { grep -rsi "${1}" -- *; }
 
 # Exports --------------------------------
 export PATH="${PATH}:${HOME}/bin:${HOME}/.local/bin"
@@ -88,14 +98,14 @@ PURPLE="\001\e[1;35m\002"
 
 # lets parse some git magic
 _parse_git_status() {
-  local branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+  branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
   if [ "${branch}" ]; then
     status=$(git status --porcelain 2> /dev/null)
-    grep -qE '^ D'       <<< ${status} && d="${ORANGE}●" # deleted
-    grep -qE '^ A'       <<< ${status} && a="${YELLOW}●" # added
-    grep -qE '^ M'       <<< ${status} && m="${RED}●"    # modified
-    grep -qE '^\?'       <<< ${status} && u="${BLUE}●"   # untracked
-    grep -qE '^[a-zA-Z]' <<< ${status} && c="${GREEN}●"  # committed
+    grep -qE '^ D'       <<< "${status}" && d="${ORANGE}●" # deleted
+    grep -qE '^ A'       <<< "${status}" && a="${YELLOW}●" # added
+    grep -qE '^ M'       <<< "${status}" && m="${RED}●"    # modified
+    grep -qE '^\?'       <<< "${status}" && u="${BLUE}●"   # untracked
+    grep -qE '^[a-zA-Z]' <<< "${status}" && c="${GREEN}●"  # committed
     echo -e "${BOLD} (${PURPLE}${branch}${d}${c}${a}${m}${u}${NC}${BOLD})"
   fi
 }
