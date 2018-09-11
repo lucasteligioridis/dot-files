@@ -68,6 +68,7 @@ export AWS_REGIONS="ap-southeast-2 us-west-2"
 export FZF_COMPLETION_TRIGGER='z'
 export PYENV_ROOT="${HOME}/.pyenv"
 export PATH="${PYENV_ROOT}/bin:${PATH}"
+export SHELLCHECK_OPTS="-e SC1090"
 
 # setup fasd
 eval "$(fasd --init auto)"
