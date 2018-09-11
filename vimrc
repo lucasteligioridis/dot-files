@@ -43,6 +43,7 @@ Plug 'scrooloose/nerdcommenter'
 " File browswer
 Plug 'scrooloose/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 
 " Better language packs
 Plug 'sheerun/vim-polyglot'
