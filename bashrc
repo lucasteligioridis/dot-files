@@ -81,6 +81,11 @@ if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
 
+# alias hub if installed
+if command -v hub 1>/dev/null 2>&1; then
+  eval "$(hub alias -s)"
+fi
+
 # autocomplete targets in Makefile
 [ -f Makefile ] && complete -W "$(grep -oE '^[a-zA-Z0-9_-]+:([^=]|$)' Makefile | sed 's/[^a-zA-Z0-9_-]*$//')" make
 
