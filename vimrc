@@ -52,6 +52,9 @@ Plug 'sheerun/vim-polyglot'
 Plug 'ervandew/supertab'
 Plug 'godlygeek/tabular'
 
+" Indent lines
+Plug 'Yggdroot/indentLine'
+
 " Syntax checker
 Plug 'vim-syntastic/syntastic'
 
@@ -348,6 +351,10 @@ let g:WebDevIconsNerdTreeAfterGlyphPadding = '  '
 set number
 set relativenumber
 set cursorline
+
+" Indent line symbols -----------------
+let g:indentLine_enabled = 1
+let g:indentLine_char = "▏"
 
 " ============================================================================
 " Autocomplete
