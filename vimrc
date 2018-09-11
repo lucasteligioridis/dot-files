@@ -257,7 +257,6 @@ map Q :q<CR>
 "imap <C-d> <Esc>:q!<CR>
 map <C-s> :w!<CR>
 imap <C-s> <ESC>:w!<CR>
-map <Space> i
 
 " Resize panes
 map <C-D-left> <C-W><<>
