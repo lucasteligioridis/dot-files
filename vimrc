@@ -404,6 +404,7 @@ let g:syntastic_sh_shellcheck_args = "-x"
 let g:syntastic_python_flake8_exec = 'python'
 let g:syntastic_python_flake8_args = ['-m', 'flake8']
 let g:syntastic_filetype_map = {"Dockerfile": "dockerfile"}
+let g:syntastic_go_checkers = ['govet', 'errcheck', 'go']
 
 " enable syntax checking
 set statusline+=%#warningmsg#
