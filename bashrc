@@ -4,13 +4,26 @@
 alias sssh="ssh -q -o BatchMode=yes -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -t"
 alias chromium="command chromium --audio-buffer-size=2048"
 alias ls="ls --color=auto --group-directories-first"
-alias genpasswd="strings /dev/urandom | grep -o '[[:alnum:]]' | head -n 30 | tr -d '\n'; echo"
 alias tree="ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'"
 alias ss="pmset displaysleepnow"
 alias grep='grep --exclude="*.pyc" --exclude="*.swp" --exclude="*.tfstate.backup" --color=auto --exclude-dir=.terraform --exclude-dir=.git'
 alias v="f -e vim" # quick opening files with vim
 alias show_apt_installs='( zcat $( ls -tr /var/log/apt/history.log*.gz ) ; cat /var/log/apt/history.log ) | grep -E "^(Start-Date:|Commandline:)" | grep -v aptdaemon | grep -E "^Commandline:"'
-alias rvim='sudo -E vim'
+
+# Prompt ----------------------------
+PROMPT_COMMAND="get_ps1"
+
+# Exports ---------------------------
+export EDITOR='vim'
+export VISUAL='vim'
+export GREP_COLORS='mt=01;31'
+export GOROOT=${HOME}/go
+export GOPATH=${HOME}/goprojects
+export AWS_REGIONS="ap-southeast-2 us-west-2"
+export FZF_COMPLETION_TRIGGER='z'
+export PYENV_ROOT="${HOME}/.pyenv"
+export PATH="${PATH}:${HOME}/bin:${HOME}/.local/bin:${GOPATH}:${PYENV_ROOT}"
+export SHELLCHECK_OPTS="-e SC1090"
 
 # Functions -----------------------
 function sudo() {
