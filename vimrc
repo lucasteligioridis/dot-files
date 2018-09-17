@@ -372,7 +372,7 @@ let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_ignore_case = 1
 let g:deoplete#enable_smart_case = 1
 set pumheight=15
-set completeopt=menuone,noinsert,preview
+set completeopt=menuone,noinsert,noselect
 call deoplete#custom#source('ultisnips', 'rank', 1000)
 call deoplete#custom#source('ultisnips', 'min_pattern_length', 1)
 call deoplete#custom#source('buffer', 'max_menu_width', 90)
