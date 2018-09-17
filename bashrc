@@ -69,66 +69,59 @@ function sfind() { find . -iname "*${1}*" "${@:2}"; }
 function rgrep() { grep "${1}" "${@:2}" -R .; }
 function sgrep() { grep -rsi "${1}" -- *; }
 
-# Exports --------------------------------
-export PATH="${PATH}:${HOME}/bin:${HOME}/.local/bin"
-export EDITOR='vim'
-export VISUAL='vim'
-export GREP_COLORS='mt=01;31'
-export GOROOT=${HOME}/go
-export GOPATH=${HOME}/goprojects
-export PATH=${PATH}:${GOROOT}/bin:${GOPATH}
-export AWS_REGIONS="ap-southeast-2 us-west-2"
-export FZF_COMPLETION_TRIGGER='z'
-export PYENV_ROOT="${HOME}/.pyenv"
-export PATH="${PYENV_ROOT}/bin:${PATH}"
-export SHELLCHECK_OPTS="-e SC1090"
+# check if command exists and run custom startup
+function command_init() {
+  local app=${1}
+  local cmd=${*}
 
-# setup fasd
-eval "$(fasd --init auto)"
-
-# enable fzf
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-
-# start python virtual environment
-if command -v pyenv 1>/dev/null 2>&1; then
-  eval "$(pyenv init -)"
-fi
-
-# alias hub if installed
-if command -v hub 1>/dev/null 2>&1; then
-  eval "$(hub alias -s)"
-fi
-
-# autocomplete targets in Makefile
-[ -f Makefile ] && complete -W "$(grep -oE '^[a-zA-Z0-9_-]+:([^=]|$)' Makefile | sed 's/[^a-zA-Z0-9_-]*$//')" make
-
-# disable software flow control (dont freeze terminal)
-stty -ixon
-
-# Prompt ----------------------------
-NC="\001\e[0m\002"
-BOLD="\001\e[1m\002"
-ORANGE="\001\e[38;5;214m\002"
-RED="\001\e[1;31m\002"
-YELLOW="\001\e[1;33m\002"
-GREEN="\001\e[1;32m\002"
-BLUE="\001\e[1;34m\002"
-PURPLE="\001\e[1;35m\002"
-
-# lets parse some git magic
-_parse_git_status() {
-  branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
-  if [ "${branch}" ]; then
-    status=$(git status --porcelain 2> /dev/null)
-    grep -qE '^ D'       <<< "${status}" && d="${ORANGE}●" # deleted
-    grep -qE '^ A'       <<< "${status}" && a="${YELLOW}●" # added
-    grep -qE '^ M'       <<< "${status}" && m="${RED}●"    # modified
-    grep -qE '^\?'       <<< "${status}" && u="${BLUE}●"   # untracked
-    grep -qE '^[a-zA-Z]' <<< "${status}" && c="${GREEN}●"  # committed
-    echo -e "${BOLD} (${PURPLE}${branch}${d}${c}${a}${m}${u}${NC}${BOLD})"
+  if command -v "${app}" 1>/dev/null 2>&1; then
+    eval "$(${cmd})"
   fi
 }
 
-# short prompt path
-PROMPT_COMMAND='PS1X=$(sed "s:\([^/\.]\)[^/]*/:\1/:g" <<< ${PWD/#$HOME/\~})'
-export PS1='\[\033[0;36m\]\[\033[1m\]$PS1X\[\033[0m\]\[\033[1m\]$(_parse_git_status)\[\033[38;5;214m\] ツ \[\033[0m\]'
+# Parse git branch and status
+function get_git() {
+  branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+  if [ "${branch}" ]; then
+    status=$(git status --porcelain 2> /dev/null)
+    grep -qE '^ D'       <<< "${status}" && d="${orange}●" # deleted
+    grep -qE '^ A'       <<< "${status}" && a="${yellow}●" # added
+    grep -qE '^ M'       <<< "${status}" && m="${red}●"    # modified
+    grep -qE '^\?'       <<< "${status}" && u="${blue}●"   # untracked
+    grep -qE '^[a-zA-Z]' <<< "${status}" && c="${green}●"  # committed
+    echo -e "${bold} (${purple}${branch}${d}${c}${a}${m}${u}${nc}${bold})"
+  fi
+}
+
+function get_ps1() {
+  local nc="\001\e[0m\002"
+  local bold="\001\e[1m\002"
+  local orange="\001\e[38;5;214m\002"
+  local red="\001\e[1;31m\002"
+  local yellow="\001\e[1;33m\002"
+  local green="\001\e[1;32m\002"
+  local blue="\001\e[1;34m\002"
+  local teal="\001\e[0;36m\002"
+  local purple="\001\e[1;35m\002"
+
+  # shorten path
+  PS1X=$(sed "s:\([^/\.]\)[^/]*/:\1/:g" <<< "${PWD/#$HOME/\~}")
+
+  # declare prompt
+  PS1="${teal}${bold}${PS1X}${nc}$(get_git)${bold}${orange} ツ ${nc}"
+}
+
+# Custom init apps ------------------------
+command_init fasd --init auto
+command_init pyenv init -
+command_init hub alias -s
+
+# Misc ------------------------------------
+# autocomplete targets in Makefile
+[ -f Makefile ] && complete -W "$(grep -oE '^[a-zA-Z0-9_-]+:([^=]|$)' Makefile | sed 's/[^a-zA-Z0-9_-]*$//')" make
+
+# disable software flow control (dont freeze terminal with C-S)
+stty -ixon
+
+# start fzf
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
