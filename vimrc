@@ -147,6 +147,7 @@ set number    " line numbers
 set expandtab " tabs -> spaces
 set tabstop=2
 set wrap
+set list lcs=tab:\▏\ " add indent line for tabs
 
 " bash like tab completion
 set wildmode=longest,list,full
