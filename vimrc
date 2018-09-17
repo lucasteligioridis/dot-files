@@ -33,6 +33,9 @@ Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'davidhalter/jedi-vim'
 Plug 'zchee/deoplete-jedi'
 
+" Go autocomplete
+Plug 'zchee/deoplete-go', { 'do': 'make'}
+
 " Shougo deoplete prereqs
 Plug 'Shougo/neco-vim'
 Plug 'Shougo/neosnippet.vim'
@@ -391,6 +394,10 @@ inoremap <expr> <C-n> pumvisible() ? '<C-n>' :
   \ '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
 inoremap <expr> <M-,> pumvisible() ? '<C-n>' :
   \ '<C-x><C-o><C-n><C-p><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
+
+" Go -------------------------------------
+let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 
 " ============================================================================
 " Syntax highlighting and linting
