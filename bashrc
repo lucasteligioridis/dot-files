@@ -13,13 +13,13 @@ alias show_apt_installs='( zcat $( ls -tr /var/log/apt/history.log*.gz ) ; cat /
 PROMPT_COMMAND="get_ps1"
 
 # Exports ---------------------------
-export EDITOR='vim'
-export VISUAL='vim'
-export GREP_COLORS='mt=01;31'
-export GOROOT=${HOME}/go
-export GOPATH=${HOME}/goprojects
+export EDITOR="vim"
+export VISUAL="${EDITOR}"
+export GREP_COLORS="mt=01;31"
+export GOROOT="${HOME}/go"
+export GOPATH="${HOME}/goprojects"
 export AWS_REGIONS="ap-southeast-2 us-west-2"
-export FZF_COMPLETION_TRIGGER='z'
+export FZF_COMPLETION_TRIGGER="z"
 export PYENV_ROOT="${HOME}/.pyenv"
 export PATH="${PATH}:${HOME}/bin:${HOME}/.local/bin:${GOPATH}:${PYENV_ROOT}"
 export SHELLCHECK_OPTS="-e SC1090"
