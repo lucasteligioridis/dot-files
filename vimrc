@@ -164,7 +164,7 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 set iskeyword-=-
 
 " permanent undo history of files
-let s:undoDir = "/home/lucast/.vim/undo"
+let s:undoDir = $HOME."/.vim/undo"
 let &undodir=s:undoDir
 set undofile
 
