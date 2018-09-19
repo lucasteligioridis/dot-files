@@ -162,7 +162,7 @@ tmux_conf_theme_right_separator_sub='|'
 red_vpn='R'
 ops_vpn='R'
 tmux_conf_theme_status_left=' ❐ #S | ↑#{?uptime_d, #{uptime_d}d,}#{?uptime_h, #{uptime_h}h,}#{?uptime_m, #{uptime_m}m,} '
-tmux_conf_theme_status_right='#{prefix} #{pairing}#{?battery_status, #{battery_status},}#{?battery_bar, #{battery_bar},}#{?battery_percentage, #{battery_percentage},} , %R , %d %b | #{username}#{root} | #{hostname} '
+tmux_conf_theme_status_right='#{prefix} #{pairing}#{?battery_status, #{battery_status},}#{?battery_bar, #{battery_bar},} #{?battery_percentage, #{battery_percentage},} , %R , %d %b | #{username}#{root} | #{hostname} '
 
 # work in progress
 # tmux_conf_theme_status_right='#{?red_vpn, #{red_vpn}, #{?ops_vpn, #{ops_vpn} ,#{prefix}#{pairing}#{?battery_status, #{battery_status},}#{?battery_bar, #{battery_bar},}#{?battery_percentage, #{battery_percentage},} , %R , %d %b | #{username}#{root} | #{hostname} '
