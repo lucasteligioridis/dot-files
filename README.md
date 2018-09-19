@@ -1,7 +1,5 @@
 # dot-files
 
-## Consist
-
 ### Shells
 - Bash
 - Zsh
@@ -15,7 +13,7 @@
 ### Remote Access
 - SSH
 
-### Terminal
+### Terminal Multiplexers
 - TMUX
 
 ### Editors
