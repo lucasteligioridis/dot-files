@@ -62,15 +62,8 @@ function ter() {
     "apply") shift; terraform init && terraform apply -auto-approve -parallelism=100 "${@}";;
     "dns")   grep fqdn terraform.tfstate | awk '{print $2}' | tr -d '"' | tr -d ',';;
     "ls")    terraform show | grep -E '^[a-zA-Z]' | tr -d ':';;
-    "sg")    for i in $(grep -E '"sg-(.*)' terraform.tfstate | awk '{print $2}' | sort -u | tr -d '"' | tr -d ','); do echo "${i}" "$(aws cache "$i")"; done;;
+    "sg")    for i in $(grep -E '"sg-(.*)' terraform.tfstate | awk '{print $2}' | sort -u | tr -d '"' | tr -d ','); do echo "${i}"; done;;
     *)       command terraform "${@}";;
-  esac
-}
-
-function aws() {
-  case ${1} in
-    "cache") shift; grep "$1" /tmp/.awscache | awk '{print $2}';;
-    *) command aws "${@}";;
   esac
 }
 
