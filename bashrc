@@ -1,5 +1,24 @@
 #!/bin/bash
 
+# Defaults from /etc/skel/.bashrc ------------
+
+# If not running interactively, don't do anything
+case $- in
+  *i*) ;;
+    *) return;;
+esac
+
+# don't put duplicate lines or lines starting with space in the history
+HISTCONTROL=ignoreboth
+HISTSIZE=10000
+HISTFILESIZE=100000
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+
+# update the values of LINES and COLUMNS
+shopt -s checkwinsize
+
 # Aliases --------------------------
 alias sssh="ssh -q -o BatchMode=yes -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -t"
 alias chromium="command chromium --audio-buffer-size=2048"
