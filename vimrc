@@ -255,8 +255,9 @@ imap <C-s> <ESC>:w!<CR>
 map <C-D-left> <C-W><<>
 map <C-D-right> :vertical resize -20<CR>
 
-" Command-T
-map <C-f> :CommandT<CR>
+" fzf
+map <C-f> :FZF<CR>
+let g:fzf_layout = { 'down': '~20%' }
 
 " Paste below line
 nmap <F4> o<ESC>p
