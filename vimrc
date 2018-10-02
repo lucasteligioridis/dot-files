@@ -238,27 +238,16 @@ map  <S-Left>  <Esc>:tabp<CR>
 imap <S-Right> <Esc>:tabn<CR>
 map  <S-Right> <Esc>:tabn<CR>
 
-function! SuperTab()
-    if (strpart(getline('.'),col('.')-2,1)=~'^\W\?$')
-        return "\<Tab>"
-    else
-        return "\<C-n>"
-    endif
-endfunction
-inoremap <Tab> <C-R>=SuperTab()<CR>
-
 " quit/exit shortcuts fat fingers
-cmap Q<CR> q<CR>
-cmap Q!<CR> q!<CR>
-cmap Q1<CR> q!<CR>
-cmap q1<CR> q!<CR>
-cmap Wq<CR> wq<CR>
+cabbrev Q q
+cabbrev Q! q!
+cabbrev Q1 q!
+cabbrev q1 q!
+cabbrev Wq wq
 map Y y$
 map Q :q<CR>
 
-" quit and save shortcuts
-"map <C-d> :q!<CR>
-"imap <C-d> <Esc>:q!<CR>
+" save shortcuts
 map <C-s> :w!<CR>
 imap <C-s> <ESC>:w!<CR>
 
