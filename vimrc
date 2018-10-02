@@ -303,8 +303,8 @@ set t_Co=256
 " Color scheme
 colorscheme onedark
 
-" Highlight past 80 character
-autocmd BufWinEnter * match ErrorMsg /\%>79v.\%<82v/
+" Highlight and underline on 80 characters
+autocmd BufWinEnter * match SpellBad /\%>79v.*\%<81v/
 
 " ============================================================================
 " Interface
