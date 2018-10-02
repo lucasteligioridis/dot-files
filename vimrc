@@ -361,6 +361,7 @@ let g:python3_host_prog = '/home/lucast/.pyenv/versions/3.6.4/bin/python3'
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_ignore_case = 1
 let g:deoplete#enable_smart_case = 1
+let g:SuperTabDefaultCompletionType = "<c-n>"
 set pumheight=15
 set completeopt=menuone,noinsert,noselect
 call deoplete#custom#source('ultisnips', 'rank', 1000)
@@ -368,12 +369,6 @@ call deoplete#custom#source('ultisnips', 'min_pattern_length', 1)
 call deoplete#custom#source('buffer', 'max_menu_width', 90)
 call deoplete#custom#source('dictionary', 'min_pattern_length', 1)
 call deoplete#custom#source('dictionary', 'rank', 1000)
-
-" Mappings
-" Close popup and delete backward character
-inoremap <expr><BS> deoplete#smart_close_popup()."\<BS>"
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-"inoremap <expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 
 " Jedi-vim ------------------------------
 
