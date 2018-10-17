@@ -284,14 +284,6 @@ if exists('$TMUX')
     let g:tmuxcomplete#trigger = ''
 endif
 
-" Pane switching
-let g:tmux_navigator_no_mappings = 1
-nnoremap <silent> <C-S-Left>  :TmuxNavigateLeft<cr>
-nnoremap <silent> <C-S-Down>  :TmuxNavigateDown<cr>
-nnoremap <silent> <C-S-Up>    :TmuxNavigateUp<cr>
-nnoremap <silent> <C-S-Right> :TmuxNavigateRight<cr>
-nnoremap <silent> <C-S-\>     :TmuxNavigatePrevious<cr>
-
 " ============================================================================
 " Colours and themes
 
