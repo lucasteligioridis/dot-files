@@ -307,7 +307,7 @@ autocmd BufWinEnter * match SpellBad /\%>79v.*\%<81v/
 " NERDTree ----------------------------------
 autocmd vimenter * if !argc() | NERDTree | endif
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
-noremap <C-Bslash> :NERDTreeToggle<CR>
+nmap <silent><F6> :NERDTreeToggle<CR>
 syn match NERDTreeTxtFile #^\s\+.*txt$#
 highlight NERDTreeTxtFile ctermbg=red ctermfg=magenta
 let NERDTreeRespectWildIgnore=1
