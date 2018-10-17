@@ -107,6 +107,7 @@ Plug 'wincent/command-t', { 'do': 'cd ruby/command-t/ext/command-t && ruby extco
 
 " Tmux completer
 Plug 'wellle/tmux-complete.vim'
+Plug 'christoomey/vim-tmux-navigator'
 
 " Async completer
 Plug 'prabirshrestha/async.vim'
@@ -219,12 +220,6 @@ imap <C-BS> <C-W>
 " re-launch vim as sudo
 cmap w!! w !sudo tee % >/dev/null
 
-" Move across panes
-map <S-M-Left>  <C-W><left>
-map <S-M-Right> <C-W><right>
-map <S-M-Up>    <C-W><up>
-map <S-M-Down>  <C-W><down>
-
 " Tab settings
 map  <C-T>     :tabnew<CR>:e
 nmap <C-T>     :tabnew<CR>:e
@@ -288,6 +283,14 @@ if exists('$TMUX')
     " Tmux completion (with tmux-complete plugin)
     let g:tmuxcomplete#trigger = ''
 endif
+
+" Pane switching
+let g:tmux_navigator_no_mappings = 1
+nnoremap <silent> <C-S-Left>  :TmuxNavigateLeft<cr>
+nnoremap <silent> <C-S-Down>  :TmuxNavigateDown<cr>
+nnoremap <silent> <C-S-Up>    :TmuxNavigateUp<cr>
+nnoremap <silent> <C-S-Right> :TmuxNavigateRight<cr>
+nnoremap <silent> <C-S-\>     :TmuxNavigatePrevious<cr>
 
 " ============================================================================
 " Colours and themes
