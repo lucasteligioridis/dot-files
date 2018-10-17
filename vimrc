@@ -420,14 +420,15 @@ let g:ansible_extra_keywords_highlight = 1
 
 " File extension --------------------
 " Language-specific formatting
-autocmd FileType go     setlocal autoindent noexpandtab tabstop=4 shiftwidth=4
-autocmd FileType py     setlocal autoindent expandtab   tabstop=4 shiftwidth=4
-autocmd FileType rb     setlocal autoindent expandtab   tabstop=2 shiftwidth=2
-autocmd FileType sh     setlocal autoindent expandtab   tabstop=2 shiftwidth=2
-autocmd FileType zsh    setlocal autoindent expandtab   tabstop=2 shiftwidth=2
-autocmd FileType make   setlocal autoindent noexpandtab tabstop=2 shiftwidth=2
-autocmd FileType yaml   setlocal autoindent expandtab   tabstop=2 shiftwidth=2
-autocmd FileType groovy setlocal autoindent expandtab   tabstop=2 shiftwidth=2
+autocmd FileType go         setlocal autoindent noexpandtab tabstop=4 shiftwidth=4
+autocmd FileType py         setlocal autoindent expandtab   tabstop=4 shiftwidth=4
+autocmd FileType rb         setlocal autoindent expandtab   tabstop=2 shiftwidth=2
+autocmd FileType sh         setlocal autoindent expandtab   tabstop=2 shiftwidth=2
+autocmd FileType zsh        setlocal autoindent expandtab   tabstop=2 shiftwidth=2
+autocmd FileType make       setlocal autoindent noexpandtab tabstop=2 shiftwidth=2
+autocmd FileType yaml       setlocal autoindent expandtab   tabstop=2 shiftwidth=2
+autocmd FileType groovy     setlocal autoindent expandtab   tabstop=2 shiftwidth=2
+autocmd FileType dockerfile setlocal autoindent expandtab   tabstop=4 shiftwidth=4
 
 " File type formatting
 au BufRead,BufNewFile *.tf         setlocal filetype=terraform
@@ -438,3 +439,4 @@ au BufRead,BufNewFile *.tags       setlocal filetype=json
 au BufRead,BufNewFile *.template   setlocal filetype=yaml
 au BufRead,BufNewFile Dockerfile.* setlocal filetype=dockerfile
 au BufRead,BufNewFile Jenkinsfile  setlocal filetype=groovy
+au BufRead,BufNewFile *makefile*   setlocal filetype=make
