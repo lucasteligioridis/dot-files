@@ -378,11 +378,6 @@ call deoplete#custom#source('dictionary', 'rank', 1000)
 " Disable autocompletion (using deoplete instead)
 let g:jedi#completions_enabled = 0
 let deoplete#sources#jedi#show_docstring = 1
-inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-inoremap <expr> <C-n> pumvisible() ? '<C-n>' :
-  \ '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
-inoremap <expr> <M-,> pumvisible() ? '<C-n>' :
-  \ '<C-x><C-o><C-n><C-p><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
 
 " Go -------------------------------------
 let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
