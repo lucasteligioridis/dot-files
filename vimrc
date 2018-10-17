@@ -261,7 +261,7 @@ nmap <F4> o<ESC>p
 nmap <F5> :GrammarousCheck<return>
 
 " clear highlight on esc
-nnoremap <esc> :noh<return><esc>
+nnoremap <silent> <esc> :noh<return><esc>
 
 " swap semi-colon for cmd mode
 nmap ; :
