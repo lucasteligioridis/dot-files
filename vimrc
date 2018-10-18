@@ -193,7 +193,7 @@ highlight TabLineSel    ctermfg=202
 "             \ }
 
 " Enable hard modeline
-let g:hardtime_default_on = 1
+let g:hardtime_default_on = 0
 
 " ============================================================================
 " Shorctuts & key bindings
