@@ -145,6 +145,12 @@ set mouse=a
 set clipboard=unnamed
 set clipboard=unnamedplus
 
+" search settings
+set incsearch
+set smartcase
+set ignorecase
+set nohlsearch
+
 " very basic editor behaviour
 set number    " line numbers
 set expandtab " tabs -> spaces
@@ -261,9 +267,6 @@ nmap <F4> o<ESC>p
 
 " Grammar checker
 nmap <F5> :GrammarousCheck<return>
-
-" clear highlight on esc
-nnoremap <silent> <esc> :noh<return><esc>
 
 " swap semi-colon for cmd mode
 nmap ; :
