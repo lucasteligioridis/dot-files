@@ -211,7 +211,7 @@ if !has('nvim')
 endif
 
 " Remap leader key
-let mapleader = ","
+let mapleader = "\<Space>"
 
 " move entire pane one line at a time
 map <S-Up> <C-y>
