@@ -77,7 +77,7 @@ function sbs() {
 # FileSearch
 function sfind() { find . -iname "*${1}*" "${@:2}"; }
 function rgrep() { grep "${1}" "${@:2}" -R .; }
-function sgrep() { grep -rsi "${1}" -- *; }
+function sgrep() { grep -rsin "${1}" -- *; }
 
 # check if command exists and run custom startup
 function command_init() {
