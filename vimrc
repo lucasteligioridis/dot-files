@@ -169,6 +169,9 @@ au BufWritePre * :%s/\s\+$//e
 " put cursor back where it was last time when re-opening a file
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
+" enable syntax entire file
+autocmd BufEnter * :syntax sync fromstart
+
 " set dash as a word boundary
 set iskeyword-=-
 
