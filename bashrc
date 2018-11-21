@@ -135,3 +135,10 @@ stty -ixon
 
 # start fzf
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+# custom bash_completions
+if [ -d ~/.bash_completion.d ]; then
+  for file in ~/.bash_completion.d/*; do
+    source "${file}"
+  done
+fi
