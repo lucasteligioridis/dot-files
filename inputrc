@@ -22,6 +22,14 @@ set input-meta on
 set output-meta on
 set convert-meta off
 
+# enable vim style commands on shell
+set editing-mode vi
+set show-mode-in-prompt on
+
+# cursor changes like vim when insert or command mode
+set vi-ins-mode-string \1\e[6 q\2
+set vi-cmd-mode-string \1\e[2 q\2
+
 # arrow keys
 "\e[A": history-search-backward
 "\e[B": history-search-forward
