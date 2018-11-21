@@ -118,6 +118,10 @@ Plug 'prabirshrestha/asyncomplete.vim'
 " Linters
 Plug 'neomake/neomake'
 
+" Autosave vim session
+Plug 'tpope/vim-obsession'
+Plug 'dhruvasagar/vim-prosession'
+
 " Tell vim-plug we finished declaring plugins, so it can load them
 call plug#end()
 
