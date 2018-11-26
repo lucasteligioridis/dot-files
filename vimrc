@@ -238,6 +238,14 @@ let g:hardtime_default_on = 0
 
 if !has('nvim')
 	set ttymouse=xterm2
+  " make redrawing smoother
+  set ttyfast
+endif
+
+" Time out mapping after 100ms
+if !has('nvim') && &ttimeoutlen == -1
+  set ttimeout
+  set ttimeoutlen=100
 endif
 
 " Remap leader key
