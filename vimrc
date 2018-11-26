@@ -453,6 +453,21 @@ omap / <Plug>(easymotion-tn)
 map n <Plug>(easymotion-next)
 map N <Plug>(easymotion-prev)
 
+" Vim easyalign
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+
+" Goyo
+autocmd! User GoyoEnter Limelight
+autocmd! User GoyoLeave Limelight!
+
+" Limelight
+let g:limelight_paragraph_span = 1  " Don't dim one par around the current one
+let g:limelight_priority       = -1 " Don't overrule hlsearch
+
 " ============================================================================
 " Autocomplete
 
