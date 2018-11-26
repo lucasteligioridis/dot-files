@@ -1,19 +1,17 @@
 " ============================================================================
 " Vim-plug initialization
 
-let vim_plug_just_installed = 0
-let vim_plug_path = expand('~/.config/nvim/autoload/plug.vim')
-if !filereadable(vim_plug_path)
-    echo "Installing Vim-plug..."
-    echo ""
-    silent !mkdir -p ~/.config/nvim/autoload
-    silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    let vim_plug_just_installed = 1
-endif
+" Create the autocmd group used by all my autocmds (cleared when sourcing vimrc)
+augroup vimrc
+  autocmd!
+augroup END
 
-" manually load vim-plug the first time
-if vim_plug_just_installed
-    :execute 'source '.fnameescape(vim_plug_path)
+" This has to be before everything else because the rest only works if vim-plug
+" is installed
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
 " ============================================================================
@@ -118,21 +116,27 @@ Plug 'prabirshrestha/asyncomplete.vim'
 
 " Linters
 Plug 'neomake/neomake'
+Plug 'junegunn/vim-easy-align'
 
 " Autosave vim session
 Plug 'tpope/vim-obsession'
 Plug 'dhruvasagar/vim-prosession'
 
+" Focus
+Plug 'junegunn/limelight.vim'
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/vim-peekaboo'
+
 " Tell vim-plug we finished declaring plugins, so it can load them
 call plug#end()
 
 " ============================================================================
-" Install plugins the first time vim runs
+" Install missing plugins automatically on startup
 
-if vim_plug_just_installed
-    echo "Installing Bundles, please ignore key map error messages"
-    :PlugInstall
-endif
+autocmd vimrc VimEnter *
+      \  if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+      \|   PlugInstall --sync | q | runtime vimrc
+      \| endif
 
 " ============================================================================
 " Bootstrap configuration
