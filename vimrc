@@ -237,7 +237,7 @@ let g:hardtime_default_on = 0
 " Shorctuts & key bindings
 
 if !has('nvim')
-	set ttymouse=xterm2
+  set ttymouse=xterm2
   " make redrawing smoother
   set ttyfast
 endif
