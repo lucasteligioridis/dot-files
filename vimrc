@@ -110,6 +110,7 @@ Plug 'easymotion/vim-easymotion'
 " Tmux
 Plug 'wellle/tmux-complete.vim'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'tmux-plugins/vim-tmux-focus-events'
 
 " Async completer
 Plug 'prabirshrestha/async.vim'
