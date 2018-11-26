@@ -184,15 +184,33 @@ autocmd BufEnter * :syntax sync fromstart
 " set dash as a word boundary
 set iskeyword-=-
 
+" Undo
+
 " permanent undo history of files
-let s:undoDir = $HOME."/.vim/undo"
-let &undodir=s:undoDir
+set undodir=/home/lucast/.vim/undo
 set undofile
+
+" Automatically create directory for undo if it does not exist
+if !isdirectory(expand('~').'/.vim/undo')
+  !mkdir -p $HOME/.vim/undo
+endif
+
+" Backup
 
 " turn on backup
 set backup
 set backupdir=/home/lucast/.vim/tmp/
-set dir=/home/lucast/.vim/tmp/
+
+" Swap
+
+" enable swapfile
+set swapfile
+set directory=/home/lucast/.vim/swap
+
+" Automatically create directory for swapfiles if it does not exist
+if !isdirectory(expand('~').'/.vim/swap')
+  !mkdir -p $HOME/.vim/swap
+endif
 
 " fuzzy completion
 set rtp+=/.fzf
