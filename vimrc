@@ -419,8 +419,13 @@ let g:indentLine_char = "▏"
 " Vim easymotion
  " type `l` and match `l`&`L`
 let g:EasyMotion_smartcase = 1
+" disable default mappings
+let g:EasyMotion_do_mapping = 0
 " Smartsign (type `3` and match `3`&`#`)
 let g:EasyMotion_use_smartsign_us = 1
+" Jump to first match with enter & space
+let g:EasyMotion_enter_jump_first = 1
+let g:EasyMotion_space_jump_first = 1
 
 " <Leader>f{char} to move to {char}
 map  <Leader>f <Plug>(easymotion-bd-f)
