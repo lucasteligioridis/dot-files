@@ -383,6 +383,9 @@ set cursorline
 let g:indentLine_enabled = 1
 let g:indentLine_char = "▏"
 
+" Move modified -----------------------
+let g:move_key_modifier = "A-S"
+
 " Vim easymotion
  " type `l` and match `l`&`L`
 let g:EasyMotion_smartcase = 1
