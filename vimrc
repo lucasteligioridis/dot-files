@@ -450,14 +450,11 @@ let g:python3_host_prog = '/home/lucast/.pyenv/versions/3.6.4/bin/python3'
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_ignore_case = 1
 let g:deoplete#enable_smart_case = 1
+let g:deoplete#auto_complete_start_length = 1
 let g:SuperTabDefaultCompletionType = "<c-n>"
 set pumheight=15
 set completeopt=menuone,noinsert,noselect
-call deoplete#custom#source('ultisnips', 'rank', 1000)
-call deoplete#custom#source('ultisnips', 'min_pattern_length', 1)
-call deoplete#custom#source('buffer', 'max_menu_width', 90)
-call deoplete#custom#source('dictionary', 'min_pattern_length', 1)
-call deoplete#custom#source('dictionary', 'rank', 1000)
+inoremap <expr><CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
 
 " Jedi-vim ------------------------------
 
@@ -487,11 +484,6 @@ let g:syntastic_go_checkers = ['govet', 'errcheck', 'go']
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
-
-" AWS ------------------------------
-let g:AWSVimValidate = 1
-let g:UltiSnipsSnippetDirectories=["UltiSnips", "./bundle/aws-vim/snips"]
-let g:AWSSnips = "Alarm Authentication Base64 CreationPolicy FindInMap GetAtt Init Instance InstanceProfile Join LaunchConfiguration LoadBalancer Param Policy RDSIngress Ref Role SGEgress SGIngress ScalingPolicy ScheduledAction SecurityGroup Select Stack Subnet VPC Volume VolumeAttachment WaitCondition WaitConditionHandle asg cft init_command init_file init_group init_user"
 
 " Terraform -------------------------
 let g:terraform_align=1
