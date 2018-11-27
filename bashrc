@@ -39,13 +39,58 @@ export GOROOT="${HOME}/go"
 export GOPATH="${HOME}/goprojects"
 export AWS_REGIONS="ap-southeast-2 us-west-2"
 export FZF_COMPLETION_TRIGGER="z"
-export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules,*.swp,dist,*.coffee}/*" 2> /dev/null'
+export FZF_DEFAULT_OPTS="--bind J:down,K:up --reverse --ansi --multi"
 export PYENV_ROOT="${HOME}/.pyenv"
 export PATH="${PATH}:${HOME}/bin:${HOME}/.local/bin:${GOPATH}:${PYENV_ROOT}/bin"
 export SHELLCHECK_OPTS="-e SC1090" # ignore https://github.com/koalaman/shellcheck/wiki/SC1090
 export OKTA_USERNAME="lucas.teligioridis"
 
+# Binds ---------------------------
+bind -x '"\C-f": fvim'
+
 # Functions -----------------------
+function tm() {
+  [[ -n "${TMUX}" ]] && change="switch-client" || change="attach-session"
+  if [ "${1}" ]; then
+    tmux "${change}" -t "${1}" 2>/dev/null || (tmux new-session -d -s "${1}" && tmux ${change} -t "$1"); return
+  fi
+  session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0) &&  tmux ${change} -t "${session}" || echo "No sessions found."
+}
+
+function fvim() {
+  local IFS=$'\n'
+  local files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0))
+  [[ -n "${files[@]}" ]] && ${EDITOR:-vim} "${files[@]}"
+}
+
+function ffind() {
+  if [ "$#" -lt 1 ]; then echo "Supply string to search for!"; return 1; fi
+  printf -v search "%q" "$*"
+  include="ts,yml,js,json,php,md,styl,pug,jade,html,config,py,cpp,c,go,hs,rb,conf,fa,lst,tf"
+  exclude=".config,.git,node_modules,vendor,build,yarn.lock,*.sty,*.bst,*.coffee,dist,.terraform"
+  rg_command='rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always" -g "*.{'$include'}" -g "!{'$exclude'}/*"'
+  files=$(eval "${rg_command}" "${search}" | fzf --ansi --multi --reverse | awk -F ':' '{print $1":"$2":"$3}')
+  [[ -n "${files[@]}" ]] && ${EDITOR:-vim} "${files[@]}"
+}
+
+function flog() {
+  hash=$(git log --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |  fzf | awk '{print $1}')
+  echo "${hash}" | xclip
+  git show "${hash}"
+}
+
+function gc() {
+  hash=$(git log --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |  fzf | awk '{print $1}')
+  gopen "${hash}"
+}
+
+function gopen() {
+  project=$(git config --local remote.origin.url | sed s/git@github.com\\:// | sed s/\.git//)
+  url="http://github.com/${project}/commit/${1}"
+  xdg-open "${url}"
+}
+
 function sudo() {
   if [[ ${1} == "vim" ]]; then
     shift; command sudo -E vim "${@}"
