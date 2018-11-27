@@ -20,114 +20,83 @@ endif
 " this needs to be here, so vim-plug knows we are declaring the plugins we
 " want to use
 call plug#begin('~/.local/share/nvim/plugged')
+filetype plugin on
+filetype plugin indent on
 
-" Vim HardTime
-Plug 'takac/vim-hardtime'
+" Features
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }     " Autocompletion
+Plug 'Shougo/neco-vim'                                            " Prequesite for deoplete
+Plug 'scrooloose/nerdtree'                                        " File tree browser
+Plug 'scrooloose/nerdcommenter'                                   " Code commenter
+Plug 'vim-syntastic/syntastic'                                    " Code linter
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'                    " Syntax highlighting file tree
+Plug 'Xuyuanp/nerdtree-git-plugin'                                " Git for NerdTree
+Plug 'jistr/vim-nerdtree-tabs'                                    " NerdTree independent of tabs
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Install fzf for user
+Plug 'junegunn/fzf.vim'                                           " Fzf vim plugin
 
-" Autocomplete
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" Small utilities
+Plug 'bag-man/copypath.vim'                                       " copy path of file
+Plug 'rbgrouleff/bclose.vim'                                      " Close current buffer
+Plug 'can3p/incbool.vim'                                          " Toggle true/false
+Plug 'kopischke/vim-fetch'                                        " Use line numbers in file paths
+Plug 'matze/vim-move'                                             " Move lines up and down
+Plug 'takac/vim-hardtime'                                         " Hardcore vim
+Plug 'wellle/tmux-complete.vim'                                   " Tmux autocomplete
+Plug 'christoomey/vim-tmux-navigator'                             " Naviagte between tmux seamlessly
+Plug 'tmux-plugins/vim-tmux-focus-events'                         " Enable tmux focused events
+Plug 'airblade/vim-gitgutter'                                     " Git integration
+Plug 'neomake/neomake'                                            " Make syntastic asynchronus
+Plug 'prabirshrestha/async.vim'                                   " Async completion
+Plug 'prabirshrestha/asyncomplete.vim'                            " Async completion
 
-" Python autocomplete
-Plug 'davidhalter/jedi-vim'
-Plug 'zchee/deoplete-jedi'
+" Efficiency
+Plug 'ervandew/supertab'                                          " Better tab
+Plug 'godlygeek/tabular'                                          " Better tab
+Plug 'easymotion/vim-easymotion'                                  " Move around vim faster
+Plug 'junegunn/vim-easy-align'                                    " Align text
 
-" Go autocomplete
-Plug 'zchee/deoplete-go', { 'do': 'make'}
-
-" Shougo deoplete prereqs
-Plug 'Shougo/neco-vim'
-Plug 'Shougo/neosnippet.vim'
-
-" Code commenter
-Plug 'scrooloose/nerdcommenter'
-
-" File browswer
-Plug 'scrooloose/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-
-" Better language packs
-Plug 'sheerun/vim-polyglot'
-
-" Tab
-Plug 'ervandew/supertab'
-Plug 'godlygeek/tabular'
-
-" Indent lines
-Plug 'Yggdroot/indentLine'
-
-" Syntax checker
-Plug 'vim-syntastic/syntastic'
+" Languages
+Plug 'sheerun/vim-polyglot'                                       " Better language pack
+Plug 'davidhalter/jedi-vim'                                       " Syntax for python
+Plug 'zchee/deoplete-jedi'                                        " Autocomplete for python
+Plug 'fisadev/vim-isort'                                          " Autosort python imports
+Plug 'zchee/deoplete-go', { 'do': 'make'}                         " Autocomplete for go
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries'  }               " Syntax for go
+Plug 'elzr/vim-json'                                              " Syntax for json
+Plug 'hashivim/vim-terraform'                                     " Syntax for terraform
+Plug 'ekalinin/Dockerfile.vim'                                    " Syntax for docker
 
 " Snippets
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
-Plug 'Shougo/neosnippet-snippets'
+Plug 'SirVer/ultisnips'                                           " Snippet engine
+Plug 'honza/vim-snippets'                                         " More vim snippets
+Plug 'Shougo/neosnippet.vim'                                      " Deoplete snippets
+Plug 'Shougo/neosnippet-snippets'                                 " Deoplete snippets
 
-" Git plugins
-Plug 'tpope/vim-fugitive'
-Plug 'airblade/vim-gitgutter'
+" tpope
+Plug 'tpope/vim-surround'                                         " Operate on surrounding
+Plug 'tpope/vim-repeat'                                           " Repeat plugins
+Plug 'tpope/vim-commentary'                                       " Comment out blocks
+Plug 'tpope/vim-fugitive'                                         " Git integration
+Plug 'tpope/vim-abolish'                                          " Flexible search
+Plug 'tpope/vim-obsession'                                        " Autosave vim sessions
+Plug 'dhruvasagar/vim-prosession'                                 " Addon to vim-obsession
 
-" Go syntax
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries'  }
+" Appearance
+Plug 'joshdick/onedark.vim'                                       " Onedark color scheme
+Plug 'ryanoasis/vim-devicons'                                     " Better icon packs
+Plug 'vim-airline/vim-airline'                                    " Airline
+Plug 'vim-airline/vim-airline-themes'                             " Airline themes
+Plug 'mkitt/tabline.vim'                                          " Cleaner tabs
+Plug 'Yggdroot/indentLine'                                        " Show indented lines
 
-" Grammar checker
+" Writing mode
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
+Plug 'junegunn/seoul256.vim'
+Plug 'reedes/vim-pencil'
 Plug 'rhysd/vim-grammarous'
 
-" Json syntax
-Plug 'elzr/vim-json'
-
-" Surround
-Plug 'tpope/vim-surround'
-
-" Automatically sort python imports
-Plug 'fisadev/vim-isort'
-
-" Terraform
-Plug 'hashivim/vim-terraform'
-Plug 'Raimondi/delimitMate'
-
-" Docker
-Plug 'ekalinin/Dockerfile.vim'
-
-" Theme
-Plug 'joshdick/onedark.vim'
-Plug 'ryanoasis/vim-devicons'
-
-" Airline
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-
-" Fuzzy searchers
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-
-" Easymotion
-Plug 'easymotion/vim-easymotion'
-
-" Tmux
-Plug 'wellle/tmux-complete.vim'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'tmux-plugins/vim-tmux-focus-events'
-
-" Async completer
-Plug 'prabirshrestha/async.vim'
-Plug 'prabirshrestha/asyncomplete.vim'
-
-" Linters
-Plug 'neomake/neomake'
-Plug 'junegunn/vim-easy-align'
-
-" Autosave vim session
-Plug 'tpope/vim-obsession'
-Plug 'dhruvasagar/vim-prosession'
-
-" Focus
-Plug 'junegunn/limelight.vim'
-Plug 'junegunn/goyo.vim'
-Plug 'junegunn/vim-peekaboo'
-
-" Tell vim-plug we finished declaring plugins, so it can load them
 call plug#end()
 
 " ============================================================================
@@ -144,8 +113,6 @@ autocmd vimrc VimEnter *
 " global variables to enable plugins
 syntax on
 syntax enable
-filetype plugin on
-filetype plugin indent on
 
 " enable mouse
 set mouse=a
