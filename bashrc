@@ -125,27 +125,19 @@ function sudo() {
   fi
 }
 
+# replace all matching strings
 function replace() {
-  grep -rsl "${1}" -- * | tee /dev/stderr | xargs sed -i "s|${1}|${2}|g"
+  local search=${1}
+  local replace=${2}
+  grep -rsl "${search}" -- * | tee /dev/stderr | xargs sed -i "s|${search}|${replace}|g"
 }
 
-function ter() {
-  case ${1} in
-    "plan")  shift; terraform init && terraform plan -parallelism=100 "${@}";;
-    "apply") shift; terraform init && terraform apply -auto-approve -parallelism=100 "${@}";;
-    "dns")   grep fqdn terraform.tfstate | awk '{print $2}' | tr -d '"' | tr -d ',';;
-    "ls")    terraform show | grep -E '^[a-zA-Z]' | tr -d ':';;
-    "sg")    for i in $(grep -E '"sg-(.*)' terraform.tfstate | awk '{print $2}' | sort -u | tr -d '"' | tr -d ','); do echo "${i}"; done;;
-    *)       command terraform "${@}";;
-  esac
-}
-
-# Sort files by size
+# sort files by size
 function sbs() {
   du -b --max-depth 1 | sort -nr | perl -pe 's{([0-9]+)}{sprintf "%.1f%s", $1>=2**30? ($1/2**30, "G"): $1>=2**20? ($1/2**20, "M"): $1>=2**10? ($1/2**10, "K"): ($1, "")}e';
 }
 
-# FileSearch
+# file search
 function sfind() { find . -iname "*${1}*" "${@:2}"; }
 function rgrep() { grep "${1}" "${@:2}" -R .; }
 function sgrep() { grep -rsin "${1}" -- *; }
@@ -160,7 +152,7 @@ function command_init() {
   fi
 }
 
-# Parse git branch and status
+# parse git branch and status
 function get_git() {
   branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
   if [ "${branch}" ]; then
