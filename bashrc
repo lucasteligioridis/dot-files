@@ -47,6 +47,7 @@ export OKTA_USERNAME="lucas.teligioridis"
 bind -x '"\C-f": fvim'
 
 # Functions -----------------------
+# search all available tmux sessions
 function tm() {
   [[ -n "${TMUX}" ]] && change="switch-client" || change="attach-session"
   if [ "${1}" ]; then
@@ -55,12 +56,14 @@ function tm() {
   session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0) &&  tmux ${change} -t "${session}" || echo "No sessions found."
 }
 
+# search current directory for all files recursively and open with vim
 function fvim() {
   local IFS=$'\n'
   local files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0))
   [[ -n "${files[@]}" ]] && ${EDITOR:-vim} "${files[@]}"
 }
 
+# search for string in all files recursively in current directory and open with vim
 function ffind() {
   if [ "$#" -lt 1 ]; then echo "Supply string to search for!"; return 1; fi
   printf -v search "%q" "$*"
@@ -70,17 +73,20 @@ function ffind() {
   [[ -n "${files[@]}" ]] && ${EDITOR:-vim} "${files[@]}"
 }
 
+# diff git commit
 function flog() {
   hash=$(git log --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |  fzf | awk '{print $1}')
   echo "${hash}" | xclip
   git showtool "${hash}"
 }
 
+# search git commits and find hash
 function gc() {
   hash=$(git log --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |  fzf | awk '{print $1}')
   gopen "${hash}"
 }
 
+# open git commit in browser
 function gopen() {
   local hash=${1}
   project=$(git config --local remote.origin.url)
@@ -89,6 +95,7 @@ function gopen() {
   xdg-open "${commit}" >/dev/null 2>/dev/null
 }
 
+# search latest 30 branches and checkout
 function branch() {
   local branches branch
   branches=$(git for-each-ref --count=30 --format="%(refname:short)")
