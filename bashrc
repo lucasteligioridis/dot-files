@@ -85,9 +85,18 @@ function gc() {
 }
 
 function gopen() {
-  project=$(git config --local remote.origin.url | sed s/git@github.com\\:// | sed s/\.git//)
-  url="http://github.com/${project}/commit/${1}"
-  xdg-open "${url}"
+  local hash=${1}
+  project=$(git config --local remote.origin.url)
+  url="${project%.*}"
+  commit="${url}/commit/${hash}"
+  xdg-open "${commit}" >/dev/null 2>/dev/null
+}
+
+function branch() {
+  local branches branch
+  branches=$(git for-each-ref --count=30 --format="%(refname:short)")
+  branch=$(echo "${branches}" | fzf-tmux -d $(( 2 + $(wc -l <<< "${branches}") )) +m)
+  git checkout "$(echo "${branch}" | sed "s/.* //" | sed "s#remotes/[^/]*/##")"
 }
 
 function sudo() {
