@@ -56,6 +56,7 @@ Plug 'godlygeek/tabular'                                          " Better tab
 Plug 'easymotion/vim-easymotion'                                  " Move around vim faster
 Plug 'junegunn/vim-easy-align'                                    " Align text
 Plug 'junegunn/vim-peekaboo'                                      " Register extender
+Plug 'jiangmiao/auto-pairs'                                       " Auto pairs
 
 " Languages
 Plug 'sheerun/vim-polyglot'                                       " Better language pack
