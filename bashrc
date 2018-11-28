@@ -69,14 +69,14 @@ function ffind() {
   printf -v search "%q" "$*"
   exclude=".config,.git,node_modules,vendor,build,yarn.lock,*.sty,*.bst,*.coffee,dist,.terraform"
   rg_command='rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always" -g "!{'$exclude'}/*"'
-  files=$(eval "${rg_command}" "${search}" | fzf --ansi --multi --reverse | awk -F ':' '{print $1":"$2":"$3}')
+  files=($(eval "${rg_command}" "${search}" | fzf --ansi --multi --reverse | awk -F ':' '{print $1":"$2":"$3}'))
   [[ -n "${files[@]}" ]] && ${EDITOR:-vim} "${files[@]}"
 }
 
 function flog() {
   hash=$(git log --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |  fzf | awk '{print $1}')
   echo "${hash}" | xclip
-  git show "${hash}"
+  git showtool "${hash}"
 }
 
 function gc() {
