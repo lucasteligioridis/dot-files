@@ -90,8 +90,13 @@ function gc() {
 function gopen() {
   local hash=${1}
   project=$(git config --local remote.origin.url)
-  url="${project%.*}"
-  commit="${url}/commit/${hash}"
+  url=$(dirname "${project}")
+  repo=$(basename "${project%.*}")
+  if [[ "${url}" == *"github"* ]]; then
+    commit="${url}/${repo}/commit/${hash}"
+  elif [[ "${url}" == *"bitbucket"* ]]; then
+    commit="${url/scm/projects}/repos/${repo}/commits/${hash}"
+  fi
   xdg-open "${commit}" >/dev/null 2>/dev/null
 }
 
