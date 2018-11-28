@@ -36,7 +36,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Install fzf 
 Plug 'junegunn/fzf.vim'                                           " Fzf vim plugin
 
 " Small utilities
-Plug 'bag-man/copypath.vim'                                       " copy path of file
+Plug 'bag-man/copypath.vim'                                       " Copy path of file
 Plug 'rbgrouleff/bclose.vim'                                      " Close current buffer
 Plug 'can3p/incbool.vim'                                          " Toggle true/false
 Plug 'kopischke/vim-fetch'                                        " Use line numbers in file paths
@@ -55,6 +55,7 @@ Plug 'ervandew/supertab'                                          " Better tab
 Plug 'godlygeek/tabular'                                          " Better tab
 Plug 'easymotion/vim-easymotion'                                  " Move around vim faster
 Plug 'junegunn/vim-easy-align'                                    " Align text
+Plug 'junegunn/vim-peekaboo'                                      " Register extender
 
 " Languages
 Plug 'sheerun/vim-polyglot'                                       " Better language pack
