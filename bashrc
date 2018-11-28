@@ -3,15 +3,12 @@
 # Defaults from /etc/skel/.bashrc ------------
 
 # If not running interactively, don't do anything
-case $- in
-  *i*) ;;
-    *) return;;
-esac
+[[ $- != *i* ]] && return
 
 # don't put duplicate lines or lines starting with space in the history
 HISTCONTROL=ignoreboth
-HISTSIZE=10000
-HISTFILESIZE=100000
+HISTSIZE=100000
+HISTFILESIZE=1000000
 
 # append to the history file, don't overwrite it
 shopt -s histappend
