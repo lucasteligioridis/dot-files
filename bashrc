@@ -78,7 +78,7 @@ function ffind() {
   if [ "$#" -lt 1 ]; then echo "Supply string to search for!"; return 1; fi
   printf -v search "%q" "$*"
   exclude=".config,.git,node_modules,vendor,build,yarn.lock,*.sty,*.bst,*.coffee,dist,.terraform"
-  rg_command='rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always" -g "!{'$exclude'}/*"'
+  rg_command='rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always" -g "!{'${exclude}'}/*"'
   files=($(eval "${rg_command}" "${search}" | fzf --ansi --multi --reverse | awk -F ':' '{print $1":"$2":"$3}'))
   [[ -n "${files[@]}" ]] && ${EDITOR:-vim} "${files[@]}"
 }
@@ -161,7 +161,6 @@ function sgrep() { grep -rsin "${1}" -- *; }
 function command_init() {
   local app=${1}
   local cmd=${*}
-
   if command -v "${app}" 1>/dev/null 2>&1; then
     eval "$(${cmd})"
   fi
