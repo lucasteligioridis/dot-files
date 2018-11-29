@@ -6,15 +6,16 @@
 [[ $- != *i* ]] && return
 
 # don't put duplicate lines or lines starting with space in the history
-HISTCONTROL=ignoreboth
+HISTCONTROL=ignoreboth:erasedups:ignorespace
 HISTSIZE=100000
 HISTFILESIZE=1000000
 
-# append to the history file, don't overwrite it
-shopt -s histappend
-
-# update the values of LINES and COLUMNS
-shopt -s checkwinsize
+# https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html
+shopt -s histappend   # append to the history file, don't overwrite it
+shopt -s checkwinsize # update the values of LINES and COLUMNS
+shopt -s cdspell      # minor errors in the spelling of a directory component in a cd command will be corrected.
+shopt -s cmdhist      # save all lines of a multiple-line command in the same history entry
+shopt -u execfail     # exec process should kill the shell when it exits
 
 # Aliases --------------------------
 alias sssh="ssh -q -o BatchMode=yes -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -t"
