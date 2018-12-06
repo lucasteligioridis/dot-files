@@ -70,8 +70,6 @@ Plug 'hashivim/vim-terraform'                                     " Syntax for t
 Plug 'ekalinin/Dockerfile.vim'                                    " Syntax for docker
 
 " Snippets
-Plug 'SirVer/ultisnips'                                           " Snippet engine
-Plug 'honza/vim-snippets'                                         " More vim snippets
 Plug 'Shougo/neosnippet.vim'                                      " Deoplete snippets
 Plug 'Shougo/neosnippet-snippets'                                 " Deoplete snippets
 
