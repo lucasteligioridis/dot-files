@@ -120,18 +120,18 @@ function gopen() {
 # search latest 30 branches and checkout
 function branch() {
   local branches branch
-  branches=$(git for-each-ref --count=30 --format="%(refname:short)")
-  branch=$(echo "${branches}" | fzf-tmux -d $(( 2 + $(wc -l <<< "${branches}") )) +m)
+  branches=$(git branch --all) &&
+  branch=$(echo "${branches}" | fzf-tmux -d $(( 2 + $(wc -l <<< "${branches}") )) +m) &&
   git checkout "$(echo "${branch}" | sed "s/.* //" | sed "s#remotes/[^/]*/##")"
 }
 
 # search chromium history and launch in browser
 function ch() {
-  local cols sep google_history
+  local cols sep chromium_history
   cols=$(( COLUMNS / 3 ))
   sep='{::}'
-  google_history="${HOME}/.config/chromium/Default/History"
-  cp -f "${google_history}" /tmp/h
+  chromium_history="${HOME}/.config/chromium/Default/History"
+  cp -f "${chromium_history}" /tmp/h
   sqlite3 -separator ${sep} /tmp/h \
     "select substr(title, 1, ${cols}), url
      from urls order by last_visit_time desc" |
