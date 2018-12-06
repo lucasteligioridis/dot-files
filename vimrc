@@ -233,17 +233,17 @@ imap <C-BS> <C-W>
 cmap w!! w !sudo tee % >/dev/null
 
 " Tab settings
-map  <C-T>     :tabnew<CR>:e
-nmap <C-T>     :tabnew<CR>:e
-imap <C-T>     <Esc>:tabnew<CR>:e
-nmap ^[[1;2D   :tabp<CR>
-nmap ^[[1;2C   :tabn<CR>
-imap ^[[1;2D   <Esc>:tabp<CR>
-imap ^[[1;2C   <Esc>:tabn<CR>
-imap <S-Left>  <Esc>:tabp<CR>
-map  <S-Left>  <Esc>:tabp<CR>
-imap <S-Right> <Esc>:tabn<CR>
-map  <S-Right> <Esc>:tabn<CR>
+map  <silent><C-T>     :tabnew<CR>i
+nmap <silent><C-T>     :tabnew<CR>i
+imap <silent><C-T>     <Esc>:tabnew<CR>i
+nmap <silent>^[[1;2D   :tabp<CR>
+nmap <silent>^[[1;2C   :tabn<CR>
+imap <silent>^[[1;2D   <Esc>:tabp<CR>
+imap <silent>^[[1;2C   <Esc>:tabn<CR>
+imap <silent><S-Left>  <Esc>:tabp<CR>
+map  <silent><S-Left>  <Esc>:tabp<CR>
+imap <silent><S-Right> <Esc>:tabn<CR>
+map  <silent><S-Right> <Esc>:tabn<CR>
 
 " quit/exit shortcuts fat fingers
 cabbrev Q q
