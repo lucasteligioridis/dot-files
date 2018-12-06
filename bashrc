@@ -139,6 +139,14 @@ function ch() {
   fzf --ansi --multi --query="!localhost " | sed 's#.*\(https*://\)#\1#' | xargs xdg-open > /dev/null 2> /dev/null
 }
 
+function fuzzpass() {
+  local arg=$1
+  local item
+  item=$(1pass | fzf-tmux)
+  [[ ! -z "${arg}" ]] || arg="password"
+  [[ ! -z "${item}" ]] && 1pass "${item}" "${arg}"
+}
+
 function sudo() {
   if [[ ${1} == "vim" ]]; then
     shift; command sudo -E vim "${@}"
