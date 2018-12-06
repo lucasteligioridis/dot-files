@@ -59,9 +59,10 @@ bind -x '"\C-f": fvim'
 # Functions -----------------------
 # search all available tmux sessions
 function tm() {
+  local name=${1}
   [[ -n "${TMUX}" ]] && change="switch-client" || change="attach-session"
-  if [ "${1}" ]; then
-    tmux "${change}" -t "${1}" 2>/dev/null || (tmux new-session -d -s "${1}" && tmux ${change} -t "$1"); return
+  if [ "${name}" ]; then
+    tmux "${change}" -t "${name}" 2>/dev/null || (tmux new-session -d -s "${name}" && tmux ${change} -t "${name}"); return
   fi
   session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0) &&  tmux ${change} -t "${session}" || echo "No sessions found."
 }
