@@ -181,7 +181,7 @@ if !isdirectory(expand('~').'/.vim/swap')
 endif
 
 " fuzzy completion
-set rtp+=/.fzf
+set runtimepath+=/.fzf
 
 " set utf8 encoding by default
 set encoding=utf8
@@ -260,12 +260,7 @@ map Q :q<CR>
 map <C-s> :w!<CR>
 imap <C-s> <ESC>:w!<CR>
 
-" Resize panes
-map <C-D-left> <C-W><<>
-map <C-D-right> :vertical resize -20<CR>
-
 " fzf
-map <C-f> :FZF<CR>
 let g:fzf_layout = { 'down': '~20%' }
 
 " Take colours from colour scheme
@@ -302,7 +297,7 @@ nmap ; :
 " Tmux
 
 " tmux and vim combination
-if &term =~ '^screen'
+if &term =~# '^screen'
     " tmux will send xterm-style keys when its xterm-keys option is on
     execute "set <xUp>=\e[1;*A"
     execute "set <xDown>=\e[1;*B"
@@ -327,7 +322,7 @@ nnoremap <silent> <M-\> :TmuxNavigatePrevious<cr>
 " ============================================================================
 " Colours and themes
 
-if (has("termguicolors"))
+if (has('termguicolors'))
     set termguicolors
 endif
 
@@ -346,7 +341,7 @@ autocmd BufWinEnter * match SpellBad /\%>79v.*\%<81v/
 
 " NERDTree ----------------------------------
 autocmd vimenter * if !argc() | NERDTree | endif
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+autocmd bufenter * if (winnr('$') == 1 && exists('b:NERDTreeType') && b:NERDTreeType == 'primary') | q | endif
 nmap <silent><F6> :NERDTreeToggle<CR>
 syn match NERDTreeTxtFile #^\s\+.*txt$#
 highlight NERDTreeTxtFile ctermbg=red ctermfg=magenta
@@ -359,8 +354,8 @@ let NERDTreeShowHidden=1
 set noshowmode
 
 " Detect file encoding
-if has("multi_byte")
-  if &termencoding == ""
+if has('multi_byte')
+  if &termencoding ==# ''
     let &termencoding = &encoding
     endif
   set encoding=utf-8
@@ -387,10 +382,10 @@ set cursorline
 
 " Indent line symbols -----------------
 let g:indentLine_enabled = 1
-let g:indentLine_char = "▏"
+let g:indentLine_char = '▏'
 
 " Move modified -----------------------
-let g:move_key_modifier = "A-S"
+let g:move_key_modifier = 'A-S'
 
 " Vim easymotion
  " type `l` and match `l`&`L`
@@ -457,7 +452,7 @@ let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_ignore_case = 1
 let g:deoplete#enable_smart_case = 1
 let g:deoplete#auto_complete_start_length = 1
-let g:SuperTabDefaultCompletionType = "<c-n>"
+let g:SuperTabDefaultCompletionType = '<c-n>'
 set pumheight=15
 set completeopt=menuone,noinsert,noselect
 inoremap <expr><CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
@@ -480,10 +475,10 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
-let g:syntastic_sh_shellcheck_args = "-x"
+let g:syntastic_sh_shellcheck_args = '-x'
 let g:syntastic_python_flake8_exec = 'python'
 let g:syntastic_python_flake8_args = ['-m', 'flake8']
-let g:syntastic_filetype_map = {"Dockerfile": "dockerfile"}
+let g:syntastic_filetype_map = {'Dockerfile': 'dockerfile'}
 let g:syntastic_go_checkers = ['govet', 'errcheck', 'go']
 
 " enable syntax checking
