@@ -23,7 +23,7 @@ alias chromium="command chromium --audio-buffer-size=2048"
 alias ls="ls --color=auto --group-directories-first"
 alias tree="ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'"
 alias grep='grep --exclude="*.pyc" --exclude="*.swp" --exclude="*.tfstate.backup" --color=auto --exclude-dir=.terraform --exclude-dir=.git'
-alias v="f -e vim" # quick opening files with vim
+alias v="vf" # quick opening files with vim
 alias show_apt_installs='( zcat $( ls -tr /var/log/apt/history.log*.gz ) ; cat /var/log/apt/history.log ) | grep -E "^(Start-Date:|Commandline:)" | grep -v aptdaemon | grep -E "^Commandline:"'
 
 # Prompt ----------------------------
@@ -73,11 +73,17 @@ function fvim() {
   [[ -n "${files[@]}" ]] && ${EDITOR:-vim} "${files[@]}"
 }
 
+# vim with fasd and fzf
+function vf() {
+  local file
+  file="$(fasd -Rfl "$1" | fzf --height 40% -1 -0 --no-sort +m)" && ${EDITOR:-vim} "${file}" || return 1
+}
+
 # search for string in all files recursively in current directory and open with vim
-function ffind() {
+function vfind() {
   if [ "$#" -lt 1 ]; then echo "Supply string to search for!"; return 1; fi
   printf -v search "%q" "$*"
-  exclude=".config,.git,node_modules,vendor,build,yarn.lock,*.sty,*.bst,*.coffee,dist,.terraform"
+  exclude=".config,.git,node_modules,vendor,build,yarn.lock,*.sty,*.bst,*.coffee,dist,**/*.terraform"
   rg_command='rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always" -g "!{'${exclude}'}/*"'
   files=($(eval "${rg_command}" "${search}" | fzf --ansi --multi --reverse | awk -F ':' '{print $1":"$2":"$3}'))
   [[ -n "${files[@]}" ]] && ${EDITOR:-vim} "${files[@]}"
