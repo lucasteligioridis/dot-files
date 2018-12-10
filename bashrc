@@ -214,7 +214,7 @@ function get_ps1() {
   PS1X=$(sed "s:\([^/\.]\)[^/]*/:\1/:g" <<< "${PWD/#$HOME/\~}")
 
   # declare prompt
-  PS1="${teal}${bold}${PS1X}${nc}$(get_git)${bold}${orange} ツ ${nc}"
+  PS1="${teal}${bold}${PS1X}${nc}$(get_git)${bold}${orange} λ ${nc}"
 }
 
 # Custom init apps ------------------------
