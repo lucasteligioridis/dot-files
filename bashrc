@@ -9,13 +9,17 @@
 HISTCONTROL=ignoreboth:erasedups:ignorespace
 HISTSIZE=100000
 HISTFILESIZE=1000000
+HISTTIMEFORMAT='%F %T ' # use standard ISO time format
 
 # https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html
 shopt -s histappend   # append to the history file, don't overwrite it
 shopt -s checkwinsize # update the values of LINES and COLUMNS
 shopt -s cdspell      # minor errors in the spelling of a directory component in a cd command will be corrected.
+shopt -s dirspell     # minor errors in the spelling of a directory during tab-completion
+shopt -s autocd       # a command name that is the name of a directory is executed as if it were the argument to the cd command
 shopt -s cmdhist      # save all lines of a multiple-line command in the same history entry
 shopt -u execfail     # exec process should kill the shell when it exits
+shopt -s globstar     # turn on recursive globbing
 
 # Aliases --------------------------
 alias sssh="ssh -q -o BatchMode=yes -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -t"
