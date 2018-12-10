@@ -68,20 +68,20 @@ function tm() {
   if [ "${name}" ]; then
     tmux "${change}" -t "${name}" 2>/dev/null || (tmux new-session -d -s "${name}" && tmux ${change} -t "${name}"); return
   fi
-  session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0) &&  tmux ${change} -t "${session}" || echo "No sessions found."
+  session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0) && tmux ${change} -t "${session}" || echo "No sessions found."
 }
 
 # search current directory for all files recursively and open with vim
 function fvim() {
   local IFS=$'\n'
   local files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0))
-  [[ -n "${files[@]}" ]] && ${EDITOR:-vim} "${files[@]}"
+  [[ -n "${files[@]}" ]] && ${EDITOR} "${files[@]}"
 }
 
 # vim with fasd and fzf
 function vf() {
   local file
-  file="$(fasd -Rfl "$1" | fzf --height 40% -1 -0 --no-sort +m)" && ${EDITOR:-vim} "${file}" || return 1
+  file="$(fasd -Rfl "$1" | fzf --height 40% -1 -0 --no-sort +m)" && ${EDITOR} "${file}" || return 1
 }
 
 # search for string in all files recursively in current directory and open with vim
@@ -91,19 +91,19 @@ function vfind() {
   exclude=".config,.git,node_modules,vendor,build,yarn.lock,*.sty,*.bst,*.coffee,dist,**/*.terraform"
   rg_command='rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always" -g "!{'${exclude}'}/*"'
   files=($(eval "${rg_command}" "${search}" | fzf --ansi --multi --reverse | awk -F ':' '{print $1":"$2":"$3}'))
-  [[ -n "${files[@]}" ]] && ${EDITOR:-vim} "${files[@]}"
+  [[ -n "${files[@]}" ]] && ${EDITOR} "${files[@]}"
 }
 
 # diff git commit
 function flog() {
-  hash=$(git log --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |  fzf | awk '{print $1}')
+  hash=$(git log --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" | fzf | awk '{print $1}')
   echo "${hash}" | xclip
   git showtool "${hash}"
 }
 
 # search git commits and find hash
 function gc() {
-  hash=$(git log --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |  fzf | awk '{print $1}')
+  hash=$(git log --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" | fzf | awk '{print $1}')
   gopen "${hash}"
 }
 
