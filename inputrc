@@ -5,6 +5,9 @@ set show-all-if-unmodified on
 set show-all-if-ambiguous on
 set visible-stats on
 
+# treat underscores and hyphens as the same
+set completion-map-case on
+
 # case insensitve auto completion
 set completion-ignore-case On
 
