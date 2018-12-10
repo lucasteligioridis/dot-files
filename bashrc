@@ -39,9 +39,8 @@ export VISUAL="${EDITOR}"
 export GREP_COLORS="mt=01;31"
 export GOROOT="${HOME}/go"
 export GOPATH="${HOME}/goprojects"
-export AWS_REGIONS="ap-southeast-2 us-west-2"
 export FZF_COMPLETION_TRIGGER="z"
-export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,*.swp,dist,**/.terraform}/*" 2> /dev/null'
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,*.swp,**/.terraform}/*" 2> /dev/null'
 export FZF_DEFAULT_OPTS="--bind J:down,K:up --reverse --ansi --multi"
 export PYENV_ROOT="${HOME}/.pyenv"
 export PATH="${PATH}:${HOME}/bin:${HOME}/.local/bin:${GOPATH}:${PYENV_ROOT}/bin"
@@ -81,14 +80,15 @@ function fvim() {
 # vim with fasd and fzf
 function vf() {
   local file
-  file="$(fasd -Rfl "$1" | fzf --height 40% -1 -0 --no-sort +m)" && ${EDITOR} "${file}" || return 1
+  file="$(fasd -Rfl "$1" | fzf --height 40% -1 -0 --no-sort +m)"
+  [[ -n "${file}" ]] && ${EDITOR} "${file}"
 }
 
 # search for string in all files recursively in current directory and open with vim
 function vfind() {
   if [ "$#" -lt 1 ]; then echo "Supply string to search for!"; return 1; fi
   printf -v search "%q" "$*"
-  exclude=".config,.git,node_modules,vendor,build,yarn.lock,*.sty,*.bst,*.coffee,dist,**/*.terraform"
+  exclude=".config,.git,.lock,**/.terraform"
   rg_command='rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always" -g "!{'${exclude}'}/*"'
   files=($(eval "${rg_command}" "${search}" | fzf --ansi --multi --reverse | awk -F ':' '{print $1":"$2":"$3}'))
   [[ -n "${files[@]}" ]] && ${EDITOR} "${files[@]}"
