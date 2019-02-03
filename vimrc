@@ -503,6 +503,9 @@ let deoplete#sources#jedi#show_docstring = 1
 let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
 let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 
+" Markdown -------------------------------
+let g:vim_markdown_conceal = 0
+
 " ============================================================================
 " Syntax highlighting and linting
 
