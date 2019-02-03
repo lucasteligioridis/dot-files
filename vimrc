@@ -67,6 +67,7 @@ Plug 'zchee/deoplete-go', { 'do': 'make'}                         " Autocomplete
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries'  }               " Syntax for go
 Plug 'elzr/vim-json'                                              " Syntax for json
 Plug 'hashivim/vim-terraform'                                     " Syntax for terraform
+Plug 'juliosueiras/vim-terraform-completion'                      " Autocomplete for terraform
 Plug 'ekalinin/Dockerfile.vim'                                    " Syntax for docker
 
 " Snippets
@@ -112,6 +113,7 @@ autocmd vimrc VimEnter *
 " global variables to enable plugins
 syntax on
 syntax enable
+set nocompatible
 
 " enable mouse
 set mouse=a
@@ -514,6 +516,7 @@ let g:syntastic_python_flake8_exec = 'python'
 let g:syntastic_python_flake8_args = ['-m', 'flake8']
 let g:syntastic_filetype_map = {'Dockerfile': 'dockerfile'}
 let g:syntastic_go_checkers = ['govet', 'errcheck', 'go']
+let g:syntastic_terraform_tffilter_plan = 1
 
 " enable syntax checking
 set statusline+=%#warningmsg#
@@ -525,8 +528,7 @@ set statusline+=%{FugitiveStatusline()}
 
 " Terraform -------------------------
 let g:terraform_align=1
-let g:terraform_fold_sections=1
-let g:terraform_remap_spacebar=1
+let g:terraform_completion_keys = 1
 autocmd FileType terraform setlocal commentstring=//%s
 
 " Ansible ---------------------------
