@@ -40,7 +40,7 @@ export GREP_COLORS="mt=01;31"
 export GOROOT="${HOME}/go"
 export GOPATH="${HOME}/goprojects"
 export FZF_COMPLETION_TRIGGER="z"
-export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,*.swp,**/.terraform}/*" 2> /dev/null'
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --no-messages -g "!{.git,*.swp,**/.terraform}/*" 2> /dev/null'
 export FZF_DEFAULT_OPTS="--bind J:down,K:up --reverse --ansi --multi"
 export PYENV_ROOT="${HOME}/.pyenv"
 export PATH="${PATH}:${HOME}/bin:${HOME}/.local/bin:${GOPATH}:${PYENV_ROOT}/bin"
