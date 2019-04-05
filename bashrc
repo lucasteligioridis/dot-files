@@ -111,14 +111,12 @@ function gc() {
 # open git commit in browser
 function gopen() {
   local hash=${1}
-  project=$(git config --local remote.origin.url)
-  url=$(dirname "${project}")
-  repo=$(basename "${project%.*}")
-  if [[ "${url}" == *"github"* ]]; then
-    commit="${url}/${repo}/commit/${hash}"
-  elif [[ "${url}" == *"bitbucket"* ]]; then
-    commit="${url/scm/projects}/repos/${repo}/commits/${hash}"
-  fi
+  git=$(git config --local remote.origin.url | sed 's/@git//' | sed 's/\.git//')
+  url=${git%%:*} # github.com
+  project=${git#*:} # username/repo
+  username=${project%%/*} # username
+  repo=${project#*/} # repo
+  commit="https://${url}/${username}/${repo}/commit/${hash}"
   xdg-open "${commit}" >/dev/null 2>/dev/null
 }
 
