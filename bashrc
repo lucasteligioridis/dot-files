@@ -111,12 +111,13 @@ function gc() {
 # open git commit in browser
 function gopen() {
   local hash=${1}
-  git=$(git config --local remote.origin.url | sed 's/@git//' | sed 's/\.git//')
-  url=${git%%:*} # github.com
-  project=${git#*:} # username/repo
-  username=${project%%/*} # username
-  repo=${project#*/} # repo
-  commit="https://${url}/${username}/${repo}/commit/${hash}"
+  # github.com:example/project
+  url=$(git config --local remote.origin.url | sed 's/@git//' | sed 's/\.git//')
+  domain=${url%%:*} # github.com
+  project=${url#*:} # example/project
+  username=${project%%/*} # example
+  repo=${project#*/} # project
+  commit="https://${domain}/${username}/${repo}/commit/${hash}"
   xdg-open "${commit}" >/dev/null 2>/dev/null
 }
 
