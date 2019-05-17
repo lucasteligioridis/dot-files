@@ -255,19 +255,19 @@ let g:fzf_layout = { 'down': '~20%' }
 
 " Take colours from colour scheme
 let g:fzf_colors = {
-      \ 'fg':      ['fg', 'Normal'],
-      \ 'bg':      ['bg', 'Normal'],
-      \ 'hl':      ['fg', 'Comment'],
-      \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-      \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-      \ 'hl+':     ['fg', 'Statement'],
-      \ 'info':    ['fg', 'PreProc'],
-      \ 'border':  ['fg', 'Ignore'],
-      \ 'prompt':  ['fg', 'Conditional'],
-      \ 'pointer': ['fg', 'Exception'],
-      \ 'marker':  ['fg', 'Keyword'],
-      \ 'spinner': ['fg', 'Label'],
-      \ 'header':  ['fg', 'Comment'] }
+  \ 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
 
 " Hide statusline and mode indicator in fzf
 autocmd! FileType fzf
@@ -421,8 +421,8 @@ let g:indentLine_char = '▏'
 " Move modified -----------------------
 let g:move_key_modifier = 'A-S'
 
-" Vim easymotion
- " type `l` and match `l`&`L`
+" Vim easymotion ----------------------
+" type `l` and match `l`&`L`
 let g:EasyMotion_smartcase = 1
 " disable default mappings
 let g:EasyMotion_do_mapping = 0
