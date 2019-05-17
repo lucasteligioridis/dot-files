@@ -63,7 +63,7 @@ bind -x '"\C-f": fvim'
 
 # Functions -----------------------
 # search all available tmux sessions
-function tm() {
+tm() {
   local name=${1}
   [[ -n "${TMUX}" ]] && change="switch-client" || change="attach-session"
   if [ "${name}" ]; then
@@ -73,21 +73,21 @@ function tm() {
 }
 
 # search current directory for all files recursively and open with vim
-function fvim() {
+fvim() {
   local IFS=$'\n'
   local files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0))
   [[ -n "${files[@]}" ]] && ${EDITOR} "${files[@]}"
 }
 
 # vim with fasd and fzf
-function vf() {
+vf() {
   local file
   file="$(fasd -Rfl "$1" | fzf --height 40% -1 -0 --no-sort +m)"
   [[ -n "${file}" ]] && ${EDITOR} "${file}"
 }
 
 # search for string in all files recursively in current directory and open with vim
-function vfind() {
+vfind() {
   if [ "$#" -lt 1 ]; then echo "Supply string to search for!"; return 1; fi
   printf -v search "%q" "$*"
   exclude=".config,.git,.lock,**/.terraform"
@@ -123,7 +123,7 @@ function gopen() {
 }
 
 # search latest 30 branches and checkout
-function branch() {
+branch() {
   local branches branch
   branches=$(git branch --all) &&
   branch=$(echo "${branches}" | fzf-tmux -d $(( 2 + $(wc -l <<< "${branches}") )) +m) &&
@@ -131,7 +131,7 @@ function branch() {
 }
 
 # search chromium history and launch in browser
-function ch() {
+ch() {
   local cols sep chromium_history
   cols=$(( COLUMNS / 3 ))
   sep='{::}'
@@ -144,7 +144,7 @@ function ch() {
   fzf --ansi --multi --query="!localhost " | sed 's#.*\(https*://\)#\1#' | xargs xdg-open > /dev/null 2> /dev/null
 }
 
-function fuzzpass() {
+fuzzpass() {
   local arg=$1
   local item
   item=$(1pass | fzf-tmux)
@@ -152,7 +152,7 @@ function fuzzpass() {
   [[ ! -z "${item}" ]] && 1pass "${item}" "${arg}"
 }
 
-function sudo() {
+sudo() {
   if [[ ${1} == "vim" ]]; then
     shift; command sudo -E vim "${@}"
   else
@@ -161,24 +161,24 @@ function sudo() {
 }
 
 # replace all matching strings
-function replace() {
+replace() {
   local search=${1}
   local replace=${2}
   grep -rsl "${search}" -- * | tee /dev/stderr | xargs sed -i "s|${search}|${replace}|g"
 }
 
 # sort files by size
-function sbs() {
+sbs() {
   du -b --max-depth 1 | sort -nr | perl -pe 's{([0-9]+)}{sprintf "%.1f%s", $1>=2**30? ($1/2**30, "G"): $1>=2**20? ($1/2**20, "M"): $1>=2**10? ($1/2**10, "K"): ($1, "")}e';
 }
 
 # file search
-function sfind() { find . -iname "*${1}*" "${@:2}"; }
-function rgrep() { grep "${1}" "${@:2}" -R .; }
-function sgrep() { grep -rsin "${1}" -- *; }
+sfind() { find . -iname "*${1}*" "${@:2}"; }
+rgrep() { grep "${1}" "${@:2}" -R .; }
+sgrep() { grep -rsin "${1}" -- *; }
 
 # check if command exists and run custom startup
-function command_init() {
+command_init() {
   local app=${1}
   local cmd=${*}
   if command -v "${app}" 1>/dev/null 2>&1; then
@@ -187,7 +187,7 @@ function command_init() {
 }
 
 # parse git branch and status
-function get_git() {
+get_git() {
   branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
   if [ "${branch}" ]; then
     status=$(git status --porcelain 2> /dev/null)
@@ -200,7 +200,7 @@ function get_git() {
   fi
 }
 
-function get_ps1() {
+get_ps1() {
   local nc="\001\e[0m\002"
   local bold="\001\e[1m\002"
   local orange="\001\e[38;5;214m\002"
