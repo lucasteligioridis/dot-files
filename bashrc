@@ -97,20 +97,20 @@ vfind() {
 }
 
 # diff git commit
-function flog() {
+flog() {
   hash=$(git log --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" | fzf | awk '{print $1}')
   echo "${hash}" | xclip
   git showtool "${hash}"
 }
 
 # search git commits and find hash
-function gc() {
+gc() {
   hash=$(git log --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" | fzf | awk '{print $1}')
-  gopen "${hash}"
+  [[ -n "${hash}" ]] && gopen "${hash}"
 }
 
 # open git commit in browser
-function gopen() {
+gopen() {
   local hash=${1}
   # github.com:example/project
   url=$(git config --local remote.origin.url | sed 's/@git//' | sed 's/\.git//')
