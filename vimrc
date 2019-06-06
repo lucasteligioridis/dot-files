@@ -51,6 +51,7 @@ Plug 'easymotion/vim-easymotion'                                  " Move around 
 Plug 'junegunn/vim-easy-align'                                    " Align text
 Plug 'junegunn/vim-peekaboo'                                      " Register extender
 Plug 'jiangmiao/auto-pairs'                                       " Auto pairs
+Plug 'yatli/coc-powershell', {'do': { -> coc#powershell#install()}}
 
 " Languages
 Plug 'sheerun/vim-polyglot'                                       " Better language pack
