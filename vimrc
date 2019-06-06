@@ -54,7 +54,6 @@ Plug 'jiangmiao/auto-pairs'                                       " Auto pairs
 
 " Languages
 Plug 'sheerun/vim-polyglot'                                       " Better language pack
-Plug 'fisadev/vim-isort'                                          " Autosort python imports
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries'  }               " Syntax for go
 Plug 'hashivim/vim-terraform'                                     " Syntax for terraform
 Plug 'ekalinin/Dockerfile.vim'                                    " Syntax for docker
