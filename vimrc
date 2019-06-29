@@ -467,10 +467,6 @@ let g:limelight_priority       = -1 " Don't overrule hlsearch
 
 " ============================================================================
 " Autocomplete
-
-" Python -------------------------------
-let g:python3_host_prog = '/home/lucast/.pyenv/versions/3.6.4/bin/python3'
-
 set pumheight=15
 set completeopt=menuone,noinsert,noselect
 
