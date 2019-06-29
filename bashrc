@@ -50,7 +50,6 @@ PROMPT_COMMAND="get_ps1"
 export EDITOR="vim"
 export VISUAL="${EDITOR}"
 export GREP_COLORS="mt=01;31"
-export GOROOT="${HOME}/go"
 export GOPATH="${HOME}/goprojects"
 export FZF_COMPLETION_TRIGGER="z"
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --no-messages -g "!{.git,*.swp,**/.terraform}/*" 2> /dev/null'
