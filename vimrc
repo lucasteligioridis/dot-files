@@ -140,7 +140,7 @@ set iskeyword-=-
 " Undo
 
 " permanent undo history of files
-set undodir=/home/lucast/.vim/undo
+set undodir=$HOME/.vim/undo
 set undofile
 
 " Automatically create directory for undo if it does not exist
@@ -152,13 +152,18 @@ endif
 
 " turn on backup
 set backup
-set backupdir=/home/lucast/.vim/tmp/
+set backupdir=$HOME/.vim/tmp/
+
+" Automatically create directory for tmp if it does not exist
+if !isdirectory(expand('~').'/.vim/tmp')
+  !mkdir -p $HOME/.vim/tmp
+endif
 
 " Swap
 
 " enable swapfile
 set swapfile
-set directory=/home/lucast/.vim/swap
+set directory=$HOME/.vim/swap
 
 " Automatically create directory for swapfiles if it does not exist
 if !isdirectory(expand('~').'/.vim/swap')
