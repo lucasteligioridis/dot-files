@@ -65,8 +65,6 @@ Plug 'tpope/vim-repeat'                                           " Repeat plugi
 Plug 'tpope/vim-commentary'                                       " Comment out blocks
 Plug 'tpope/vim-fugitive'                                         " Git integration
 Plug 'tpope/vim-abolish'                                          " Flexible search
-Plug 'tpope/vim-obsession'                                        " Autosave vim sessions
-Plug 'dhruvasagar/vim-prosession'                                 " Addon to vim-obsession
 
 " Appearance
 Plug 'joshdick/onedark.vim'                                       " Onedark color scheme
