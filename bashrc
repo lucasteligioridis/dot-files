@@ -73,6 +73,7 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 bind -x '"\C-f": fvim'
 
 # Functions -----------------------
+
 # search all available tmux sessions
 tm() {
   local name=${1}
@@ -118,6 +119,16 @@ flog() {
 gc() {
   hash=$(git log --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" | fzf | awk '{print $1}')
   [[ -n "${hash}" ]] && gopen "${hash}"
+}
+
+# search commits and show diff
+gh() {
+  _branch_name > /dev/null || return
+  git log --date=short --format="%C(green)%C(bold)%cd %C(auto)%h%d %s (%an)" --graph --color=always |
+  _fzf_down --ansi --no-sort --reverse --multi --bind 'ctrl-s:toggle-sort' \
+    --header 'Press CTRL-S to toggle sort' \
+    --preview 'grep -o "[a-f0-9]\{7,\}" <<< {} | xargs git show --color=always | head -200' |
+  grep -o "[a-f0-9]\{7,\}"
 }
 
 # open git commit in browser
