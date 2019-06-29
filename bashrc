@@ -200,16 +200,14 @@ command_init() {
 
 # parse git branch and status
 get_git() {
-  branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
-  if [ "${branch}" ]; then
-    status=$(git status --porcelain 2> /dev/null)
-    grep -qE '^ D'       <<< "${status}" && d="${orange}●" # deleted
-    grep -qE '^ A'       <<< "${status}" && a="${yellow}●" # added
-    grep -qE '^ M'       <<< "${status}" && m="${red}●"    # modified
-    grep -qE '^\?'       <<< "${status}" && u="${blue}●"   # untracked
-    grep -qE '^[a-zA-Z]' <<< "${status}" && c="${green}●"  # committed
-    echo -e "${bold} (${purple}${branch}${d}${c}${a}${m}${u}${nc}${bold})"
-  fi
+  branch=$(_branch_name) || return
+  status=$(git status --porcelain 2> /dev/null)
+  grep -qE '^ D'       <<< "${status}" && d="${orange}●" # deleted
+  grep -qE '^ A'       <<< "${status}" && a="${yellow}●" # added
+  grep -qE '^ M'       <<< "${status}" && m="${red}●"    # modified
+  grep -qE '^\?'       <<< "${status}" && u="${blue}●"   # untracked
+  grep -qE '^[a-zA-Z]' <<< "${status}" && c="${green}●"  # committed
+  echo -e "${bold} (${purple}${branch}${d}${c}${a}${m}${u}${nc}${bold})"
 }
 
 get_ps1() {
@@ -228,6 +226,15 @@ get_ps1() {
 
   # declare prompt
   PS1="${teal}${bold}${PS1X}${nc}$(get_git)${bold}${orange} λ ${nc}"
+}
+
+# helpers
+_fzf_down() {
+  fzf --height 50% "$@" --border
+}
+
+_branch_name() {
+  git rev-parse --abbrev-ref HEAD 2> /dev/null
 }
 
 # Custom init apps ------------------------
