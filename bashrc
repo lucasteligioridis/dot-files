@@ -11,6 +11,18 @@ HISTSIZE=100000
 HISTFILESIZE=1000000
 HISTTIMEFORMAT='%F %T ' # use standard ISO time format
 
+# determine OS to run custom commands
+case "${OSTYPE}" in
+  linux*)
+    os_open="xdg-open"
+    c_path="${HOME}/.config/chromium"
+  ;;
+  darwin*)
+    os_open="open"
+    c_path="${HOME}/Library/Application Support/Google/Chrome"
+  ;;
+esac
+
 # https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html
 shopt -s histappend   # append to the history file, don't overwrite it
 shopt -s checkwinsize # update the values of LINES and COLUMNS
@@ -119,7 +131,7 @@ gopen() {
   username=${project%%/*} # example
   repo=${project#*/} # project
   commit="https://${domain}/${username}/${repo}/commit/${hash}"
-  xdg-open "${commit}" >/dev/null 2>/dev/null
+  "${os_open}" "${commit}" >/dev/null 2>/dev/null
 }
 
 # search latest 30 branches and checkout
@@ -130,18 +142,18 @@ branch() {
   git checkout "$(echo "${branch}" | sed "s/.* //" | sed "s#remotes/[^/]*/##")"
 }
 
-# search chromium history and launch in browser
+# search chrome/chromium history and launch in browser
 ch() {
-  local cols sep chromium_history
+  local cols sep c_history
   cols=$(( COLUMNS / 3 ))
   sep='{::}'
-  chromium_history="${HOME}/.config/chromium/Default/History"
-  cp -f "${chromium_history}" /tmp/h
+  c_history="${c_path}/Default/History"
+  cp -f "${c_history}" /tmp/h
   sqlite3 -separator ${sep} /tmp/h \
     "select substr(title, 1, ${cols}), url
      from urls order by last_visit_time desc" |
   awk -F ${sep} '{printf "%-'${cols}'s  \x1b[36m%s\x1b[m\n", $1, $2}' |
-  fzf --ansi --multi --query="!localhost " | sed 's#.*\(https*://\)#\1#' | xargs xdg-open > /dev/null 2> /dev/null
+  fzf --ansi --multi --query="!localhost " | sed 's#.*\(https*://\)#\1#' | xargs "${os_open}" > /dev/null 2> /dev/null
 }
 
 fuzzpass() {
