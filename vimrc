@@ -111,8 +111,12 @@ set smartcase
 set ignorecase
 set nohlsearch
 
+" line numbers
+set number
+set relativenumber
+set cursorline
+
 " very basic editor behaviour
-set number    " line numbers
 set expandtab " tabs -> spaces
 set tabstop=2
 set wrap
@@ -411,11 +415,6 @@ let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:webdevicons_enable_airline_statusline = 1
 let g:webdevicons_enable_airline_tabline = 1
 let g:WebDevIconsNerdTreeAfterGlyphPadding = '  '
-
-" Line number -------------------------
-set number
-set relativenumber
-set cursorline
 
 " Indent line symbols -----------------
 let g:indentLine_enabled = 1
