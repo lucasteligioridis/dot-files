@@ -44,6 +44,7 @@ Plug 'takac/vim-hardtime'                                         " Hardcore vim
 Plug 'christoomey/vim-tmux-navigator'                             " Naviagte between tmux seamlessly
 Plug 'tmux-plugins/vim-tmux-focus-events'                         " Enable tmux focused events
 Plug 'airblade/vim-gitgutter'                                     " Git integration
+Plug 'itchyny/calendar.vim'                                       " Google calendar
 
 " Efficiency
 Plug 'godlygeek/tabular'                                          " Better tab
@@ -461,6 +462,12 @@ autocmd! User GoyoLeave Limelight!
 " Limelight
 let g:limelight_paragraph_span = 1  " Don't dim one par around the current one
 let g:limelight_priority       = -1 " Don't overrule hlsearch
+
+" Enable Google Calendar integration.
+let g:calendar_google_calendar = 1
+
+" Enable Google Tasks integration.
+let g:calendar_google_task = 1
 
 " ============================================================================
 " Autocomplete
