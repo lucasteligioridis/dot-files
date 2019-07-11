@@ -573,6 +573,39 @@ au FileType go nmap <leader>gt :GoDeclsDir<cr>
 au FileType go nmap <leader>gd <Plug>(go-def)
 au FileType go nmap <leader>gc <Plug>(go-coverage-toggle)
 
+" Tagbar =========================================
+nnoremap <F3> :TagbarToggle<cr>
+
+" Language: Go
+" Tagbar configuration for Golang
+let g:tagbar_type_go = {
+    \ 'ctagstype' : 'go',
+    \ 'kinds'     : [
+        \ 'p:package',
+        \ 'i:imports:1',
+        \ 'c:constants',
+        \ 'v:variables',
+        \ 't:types',
+        \ 'n:interfaces',
+        \ 'w:fields',
+        \ 'e:embedded',
+        \ 'm:methods',
+        \ 'r:constructor',
+        \ 'f:functions'
+    \ ],
+    \ 'sro' : '.',
+    \ 'kind2scope' : {
+        \ 't' : 'ctype',
+        \ 'n' : 'ntype'
+    \ },
+    \ 'scope2kind' : {
+        \ 'ctype' : 't',
+        \ 'ntype' : 'n'
+    \ },
+    \ 'ctagsbin'  : 'gotags',
+    \ 'ctagsargs' : '-sort -silent'
+    \ }
+
 " ============================================================================
 " Syntax highlighting and linting
 
