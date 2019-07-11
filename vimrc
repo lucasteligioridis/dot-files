@@ -33,6 +33,7 @@ Plug 'jistr/vim-nerdtree-tabs'                                    " NerdTree ind
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Install fzf for user
 Plug 'junegunn/fzf.vim'                                           " Fzf vim plugin
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}        " coc.nvim autocomplete
+Plug 'majutsushi/tagbar'                                          " Tag bar
 
 " Small utilities
 Plug 'bag-man/copypath.vim'                                       " Copy path of file
