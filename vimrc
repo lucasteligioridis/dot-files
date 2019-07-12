@@ -60,6 +60,7 @@ Plug 'sheerun/vim-polyglot'                                       " Better langu
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries'  }               " Syntax for go
 Plug 'hashivim/vim-terraform'                                     " Syntax for terraform
 Plug 'ekalinin/Dockerfile.vim'                                    " Syntax for docker
+Plug 'SirVer/ultisnips'                                           " Ulti snips
 
 " tpope
 Plug 'tpope/vim-surround'                                         " Operate on surrounding
