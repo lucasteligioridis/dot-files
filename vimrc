@@ -82,6 +82,7 @@ Plug 'junegunn/limelight.vim'
 Plug 'junegunn/seoul256.vim'
 Plug 'reedes/vim-pencil'
 Plug 'rhysd/vim-grammarous'
+Plug 'jceb/vim-orgmode'
 
 call plug#end()
 
