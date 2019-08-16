@@ -58,7 +58,6 @@ export PYENV_ROOT="${HOME}/.pyenv"
 export YARN_PATH="${HOME}/.yarn/bin:${HOME}/.config/yarn/global/node_modules/.bin"
 export PATH="${PATH}:${HOME}/bin:${HOME}/.local/bin:${GOPATH}:${GOPATH}/bin:${GOROOT}/bin:${PYENV_ROOT}/bin:${YARN_PATH}"
 export SHELLCHECK_OPTS="-e SC1090" # ignore https://github.com/koalaman/shellcheck/wiki/SC1090
-export OKTA_USERNAME="lucas.teligioridis"
 
 # color for manpages in less makes manpages a little easier to read
 export LESS_TERMCAP_mb=$'\E[01;31m'
