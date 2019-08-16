@@ -86,8 +86,9 @@ tm() {
 # search current directory for all files recursively and open with vim
 fvim() {
   local IFS=$'\n'
-  local files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0))
-  [[ -n "${files[@]}" ]] && ${EDITOR} "${files[@]}"
+  local files
+  mapfile -t files < <(fzf-tmux --query="${1}" --multi --select-1 --exit-0)
+  [[ -n "${files[*]}" ]] && ${EDITOR} "${files[@]}"
 }
 
 # vim with fasd and fzf
@@ -99,12 +100,13 @@ vf() {
 
 # search for string in all files recursively in current directory and open with vim
 vfind() {
+  local files
   if [ "$#" -lt 1 ]; then echo "Supply string to search for!"; return 1; fi
   printf -v search "%q" "$*"
   exclude=".config,.git,.lock,**/.terraform"
   rg_command='rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --no-messages --color "always" -g "!{'${exclude}'}/*"'
-  files=($(eval "${rg_command}" "${search}" | fzf --ansi --multi --reverse | awk -F ':' '{print $1":"$2":"$3}'))
-  [[ -n "${files[@]}" ]] && ${EDITOR} -p "${files[@]}"
+  mapfile -t files < <(eval "${rg_command}" "${search}" | fzf --ansi --multi --reverse | awk -F ':' '{print $1":"$2":"$3}')
+  [[ -n "${files[*]}" ]] && ${EDITOR} -p "${files[@]}"
 }
 
 # diff git commit
@@ -169,8 +171,8 @@ fuzzpass() {
   local arg=$1
   local item
   item=$(1pass | fzf-tmux)
-  [[ ! -z "${arg}" ]] || arg="password"
-  [[ ! -z "${item}" ]] && 1pass "${item}" "${arg}"
+  [[ -n "${arg}" ]] || arg="password"
+  [[ -n "${item}" ]] && 1pass "${item}" "${arg}"
 }
 
 sudo() {
@@ -231,6 +233,7 @@ get_ps1() {
   local purple="\001\e[1;35m\002"
 
   # shorten path
+  # shellcheck disable=SC2001
   PS1X=$(sed "s:\([^/\.]\)[^/]*/:\1/:g" <<< "${PWD/#$HOME/\~}")
 
   # declare prompt
