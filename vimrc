@@ -479,6 +479,7 @@ set completeopt=menuone,noinsert,noselect
 
 " Markdown -------------------------------
 let g:vim_markdown_conceal = 0
+let g:vim_markdown_conceal_code_blocks = 0
 
 " Coc-vim --------------------------------
 " if hidden is not set, TextEdit might fail.
