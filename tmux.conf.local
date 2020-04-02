@@ -290,7 +290,14 @@ set-option -ga terminal-overrides ",*256*:Tc"
 # toggle synchronize panes on and off
 bind e set-window-option synchronize-panes
 
+# send clear history to terminal
 bind -n C-l send-keys C-l
+
+# search tmux panes with fzf
+bind-key s run "tmux new-window 'bash -ci fs'"
+
+# use fuzzpass with 1pass to search for password
+bind-key \\ run "tmux split-window -l 10 'bash -ci fuzzpass'"
 
 # bind alt left and right to switch tabs directionally
 bind-key -n M-Left previous-window
