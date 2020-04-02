@@ -59,6 +59,7 @@
 
   # push
   sm  = !git ss --quiet && git co master --quiet
+  spp = !git ss && git pull && git stash pop # stash pull pop
   ppm  = !git ss --quiet && git co master --quiet && git pull --quiet && git co - --quiet && git ss pop --quiet # push
   pp  = !git pull && git push # push and rebase
   ppp = !git ss && git pull && git push && git ss pop # stash pull push pop
