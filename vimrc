@@ -384,15 +384,17 @@ autocmd BufWinEnter * match SpellBad /\%>79v.*\%<81v/
 " Interface
 
 " NERDTree ----------------------------------
-autocmd vimenter * if !argc() | NERDTree | endif
-autocmd bufenter * if (winnr('$') == 1 && exists('b:NERDTreeType') && b:NERDTreeType == 'primary') | q | endif
-nmap <silent><F6> :NERDTreeToggle<CR>
 syn match NERDTreeTxtFile #^\s\+.*txt$#
 highlight NERDTreeTxtFile ctermbg=red ctermfg=magenta
 let NERDTreeRespectWildIgnore=1
 
 " Show hidden files
 let NERDTreeShowHidden=1
+
+" NERDTreeTabs configuration
+map <Leader>n <plug>NERDTreeTabsToggle<CR>
+let g:nerdtree_tabs_open_on_gui_startup = 1
+let g:nerdtree_tabs_open_on_console_startup = 1
 
 " Disable editor mode in default bar
 set noshowmode
