@@ -346,6 +346,8 @@ _branch_name() {
 # Custom init apps ------------------------
 command_init fasd --init auto
 command_init pyenv init -
+command_init rbenv init -
+command_init nodenv init -
 command_init hub alias -s
 
 # Misc ------------------------------------
