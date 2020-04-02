@@ -356,6 +356,7 @@ set -g @extrakto_default_opt 'lines'
 # autosave state of tmux and restore on next boot
 set -g @continuum-restore 'on'
 set -g @continuum-boot 'on'
+set -g @continuum-boot-options 'alacritty,fullscreen'
 set -g @continuum-save-interval '5'
 set -g @resurrect-capture-pane-contents 'on'
 
