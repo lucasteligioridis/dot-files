@@ -542,6 +542,10 @@ nmap <leader>rn <Plug>(coc-rename)
 vmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 
+" Python
+let g:python_host_prog = "~/.pyenv/versions/2.7.17/bin/python"
+let g:python3_host_prog = "~/.pyenv/versions/3.8.1/bin/python"
+
 " Golang ---------------------------
 " disable vim-go :GoDef short cut (gd)
 " this is handled by LanguageClient [LC]
