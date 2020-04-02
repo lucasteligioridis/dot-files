@@ -220,35 +220,118 @@ command_init() {
   fi
 }
 
+git_parse_status() {
+  unset current_git_status
+
+  # grab raw status from git
+  status=$(git status --porcelain --branch 2> /dev/null) || return
+  hash=$(git rev-parse --short HEAD)
+
+  # set default variables
+  untracked=0
+  staged=0
+  changed=0
+  conflicts=0
+  deleted=0
+  ahead=0
+  behind=0
+
+  while IFS= read -r st; do
+    # grab full branch details
+    if [ "${st:0:2}" == "##" ]; then
+      # current and remote branch
+      branch="${st#* }"
+      branch="${branch%%.*}"
+      rest="${st#*...}"
+
+      # check if branch is ahead/behind from origin
+      if grep -qE '\[' <<< "${rest}"; then
+        # strip off unrequired data
+        divergence="${rest#* }"
+        divergence="${divergence//\[}"
+        divergence="${divergence//\]}"
+
+        for div in $(echo "${divergence}" | sed "s/ //g" | sed "s/,/ /g"); do
+          if grep -qE 'ahead' <<< "${div}"; then
+            ahead="${div##*'ahead'}"
+          elif grep -qE 'behind' <<< "${div}"; then
+            behind="${div##*'behind'}"
+          fi
+        done
+      fi
+
+    elif [ "${st:0:2}" == "??" ]; then
+      untracked=$((untracked+1))
+    elif [ "${st:0:2}" == " M" ]; then
+      changed=$((changed+1))
+    elif [ "${st:0:2}" == " U" ]; then
+      conflicts=$((conflicts+1))
+    elif [ "${st:0:2}" == " D" ]; then
+      deleted=$((deleted+1))
+    elif [ "${st:0:1}" != " " ]; then
+      staged=$((staged+1))
+
+      # ensure we capture git patches and count correctly
+      if [ "${st:0:2}" == "MM" ]; then
+        changed=$((changed+1))
+      fi
+    fi
+  done <<< "${status}"
+  current_git_status=1
+}
+
 # parse git branch and status
-get_git() {
-  branch=$(_branch_name) || return
-  status=$(git status --porcelain 2> /dev/null)
-  grep -qE '^ D'       <<< "${status}" && d="${orange}●" # deleted
-  grep -qE '^ A'       <<< "${status}" && a="${yellow}●" # added
-  grep -qE '^ M'       <<< "${status}" && m="${red}●"    # modified
-  grep -qE '^\?'       <<< "${status}" && u="${blue}●"   # untracked
-  grep -qE '^[a-zA-Z]' <<< "${status}" && c="${green}●"  # committed
-  echo -e "${bold} (${purple}${branch}${d}${c}${a}${m}${u}${nc}${bold})"
+git_prompt() {
+  git_parse_status
+
+  if [ -n "${current_git_status}" ]; then
+    # set default prompt
+    git_status="${bold} ${white}(${purple}${branch}${white}@${orange}${hash}${bold}${white})${white}[${nc}"
+
+    # ahead/behind from origin
+    [ "${behind}" -ne 0 ] && git_status="${git_status}${teal}↓${behind}"
+    [ "${ahead}" -ne 0 ] && git_status="${git_status}${teal}↑${ahead}"
+
+    if [[ "${behind}" -ne 0 || "${ahead}" -ne 0 ]]; then
+      git_status="${git_status}${white}|"
+    fi
+
+    # cleanliness
+    [ "${staged}" -ne 0 ] && git_status="${git_status}${red}●${staged}"
+    [ "${conflicts}" -ne 0 ] && git_status="${git_status}${blue}✖${conflicts}"
+    [ "${changed}" -ne 0 ] && git_status="${git_status}${purple}✚${changed}"
+    [ "${deleted}" -ne 0 ] && git_status="${git_status}${orange}-${deleted}"
+    [ "${untracked}" -ne 0 ] && git_status="${git_status}${nc}..."
+
+    # check if clean
+    if [[ "${staged}" -eq 0 && "${conflicts}" -eq 0 && "${changed}" -eq 0 && "${untracked}" -eq 0 && "${deleted}" -eq 0 ]]; then
+      git_status="${git_status}${green}✔"
+    fi
+
+    git_status="${git_status}${white}]${nc}"
+    echo -e "${git_status}"
+  fi
 }
 
 get_ps1() {
-  local nc="\001\e[0m\002"
-  local bold="\001\e[1m\002"
-  local orange="\001\e[38;5;214m\002"
-  local red="\001\e[1;31m\002"
-  local yellow="\001\e[1;33m\002"
-  local green="\001\e[1;32m\002"
-  local blue="\001\e[1;34m\002"
-  local teal="\001\e[0;36m\002"
-  local purple="\001\e[1;35m\002"
+  local nc='\[\033[0m\]'
+  local bold='\[\033[1m\]'
+  local orange='\[\033[38;5;214m\]'
+  local red='\[\033\[38;5;1m\]'
+  local rred='\[\033[38;5;196m\]'
+  local yellow='\[\033[1;33m\]'
+  local green='\[\033[1;32m\]'
+  local blue='\[\033[1;34m\]'
+  local teal='\[\033[38;5;14m\]'
+  local white='\[\033[38;5;231m\]'
+  local purple='\[\033[1;35m\]'
 
   # shorten path
   # shellcheck disable=SC2001
   PS1X=$(sed "s:\([^/\.]\)[^/]*/:\1/:g" <<< "${PWD/#$HOME/\~}")
 
   # declare prompt
-  PS1="${teal}${bold}${PS1X}${nc}$(get_git)${bold}${orange} λ ${nc}"
+  PS1="${teal}${bold}${PS1X}${nc}$(git_prompt)${bold}${orange} λ ${nc}"
 }
 
 # helpers
