@@ -179,10 +179,11 @@ ch() {
 
 fuzzpass() {
   local arg=$1
-  local item
-  item=$(1pass | fzf-tmux)
+  local item result
+  item=$(1pass)
+  result=$(echo "${item}" | fzf)
   [[ -n "${arg}" ]] || arg="password"
-  [[ -n "${item}" ]] && 1pass "${item}" "${arg}"
+  [[ -n "${item}" ]] && 1pass "${result}" "${arg}"
 }
 
 sudo() {
