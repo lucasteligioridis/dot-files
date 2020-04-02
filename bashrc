@@ -317,7 +317,7 @@ get_ps1() {
   local nc='\[\033[0m\]'
   local bold='\[\033[1m\]'
   local orange='\[\033[38;5;214m\]'
-  local red='\[\033\[38;5;1m\]'
+  local red='\[\033[38;5;1m\]'
   local rred='\[\033[38;5;196m\]'
   local yellow='\[\033[1;33m\]'
   local green='\[\033[1;32m\]'
