@@ -56,7 +56,7 @@ export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --no-messag
 export FZF_DEFAULT_OPTS="--bind J:down,K:up --reverse --ansi --multi"
 export PYENV_ROOT="${HOME}/.pyenv"
 export YARN_PATH="${HOME}/.yarn/bin:${HOME}/.config/yarn/global/node_modules/.bin"
-export PATH="${PATH}:${HOME}/bin:${HOME}/.local/bin:${GOPATH}:${GOPATH}/bin:${GOROOT}/bin:${PYENV_ROOT}/bin:${YARN_PATH}"
+export PATH="/usr/local/bin:${PATH}:${HOME}/bin:${HOME}/.local/bin:${GOPATH}:${GOPATH}/bin:${GOROOT}/bin:${PYENV_ROOT}/bin:${YARN_PATH}"
 export SHELLCHECK_OPTS="-e SC1090" # ignore https://github.com/koalaman/shellcheck/wiki/SC1090
 
 # color for manpages in less makes manpages a little easier to read
