@@ -68,6 +68,21 @@ export LESS_TERMCAP_so=$'\E[01;44;33m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;32m'
 
+# Colors --------------------------
+nc='\[\033[0m\]'
+bold='\[\033[1m\]'
+dim='\[\033[90m\]'
+bright='\[\033[1;37m\]'
+orange='\[\033[38;5;214m\]'
+red='\[\033[31m\]'
+rred='\[\033[38;5;196m\]'
+yellow='\[\033[1;33m\]'
+green='\[\033[1;32m\]'
+blue='\[\033[1;34m\]'
+teal='\[\033[38;5;14m\]'
+white='\[\033[38;5;231m\]'
+purple='\[\033[1;35m\]'
+
 # Binds ---------------------------
 bind -x '"\C-f": fvim'
 
