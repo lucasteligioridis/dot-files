@@ -77,7 +77,6 @@ scrolling:
 
 # Font configuration (changes require restart)
 font:
-  # Normal (roman) font face
   normal:
     family: RobotoMono Nerd Font
     style: Medium
