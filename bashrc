@@ -235,121 +235,46 @@ command_init() {
   fi
 }
 
-git_parse_status() {
-  unset current_git_status
+kube_prompt() {
+  local source=${0}
+  local context env
 
-  # grab raw status from git
-  status=$(git status --porcelain --branch 2> /dev/null) || return
-  hash=$(git rev-parse --short HEAD)
+  # grab context from config, this is way fast to fetch
+  context=$(grep "current-context:" ${HOME}/.kube/config | sed "s/current-context: //") || return
 
-  # set default variables
-  untracked=0
-  staged=0
-  changed=0
-  conflicts=0
-  deleted=0
-  ahead=0
-  behind=0
-
-  while IFS= read -r st; do
-    # grab full branch details
-    if [ "${st:0:2}" == "##" ]; then
-      # current and remote branch
-      branch="${st#* }"
-      branch="${branch%%.*}"
-      rest="${st#*...}"
-
-      # check if branch is ahead/behind from origin
-      if grep -qE '\[' <<< "${rest}"; then
-        # strip off unrequired data
-        divergence="${rest#* }"
-        divergence="${divergence//\[}"
-        divergence="${divergence//\]}"
-
-        for div in $(echo "${divergence}" | sed "s/ //g" | sed "s/,/ /g"); do
-          if grep -qE 'ahead' <<< "${div}"; then
-            ahead="${div##*'ahead'}"
-          elif grep -qE 'behind' <<< "${div}"; then
-            behind="${div##*'behind'}"
-          fi
-        done
-      fi
-
-    elif [ "${st:0:2}" == "??" ]; then
-      untracked=$((untracked+1))
-    elif [ "${st:0:2}" == " M" ]; then
-      changed=$((changed+1))
-    elif [ "${st:0:2}" == " U" ]; then
-      conflicts=$((conflicts+1))
-    elif [ "${st:0:2}" == " D" ]; then
-      deleted=$((deleted+1))
-    elif [ "${st:0:1}" != " " ]; then
-      staged=$((staged+1))
-
-      # ensure we capture git patches and count correctly
-      if [ "${st:0:2}" == "MM" ]; then
-        changed=$((changed+1))
-      fi
-    fi
-  done <<< "${status}"
-  current_git_status=1
-}
-
-# parse git branch and status
-git_prompt() {
-  git_parse_status
-
-  if [ -n "${current_git_status}" ]; then
-    # set default prompt
-    git_status="${bold} ${white}(${purple}${branch}${white}@${orange}${hash}${bold}${white})${white}[${nc}"
-
-    # ahead/behind from origin
-    [ "${behind}" -ne 0 ] && git_status="${git_status}${teal}↓${behind}"
-    [ "${ahead}" -ne 0 ] && git_status="${git_status}${teal}↑${ahead}"
-
-    if [[ "${behind}" -ne 0 || "${ahead}" -ne 0 ]]; then
-      git_status="${git_status}${white}|"
-    fi
-
-    # cleanliness
-    [ "${staged}" -ne 0 ] && git_status="${git_status}${red}●${staged}"
-    [ "${conflicts}" -ne 0 ] && git_status="${git_status}${blue}✖${conflicts}"
-    [ "${changed}" -ne 0 ] && git_status="${git_status}${purple}✚${changed}"
-    [ "${deleted}" -ne 0 ] && git_status="${git_status}${orange}-${deleted}"
-    [ "${untracked}" -ne 0 ] && git_status="${git_status}${nc}..."
-
-    # check if clean
-    if [[ "${staged}" -eq 0 && "${conflicts}" -eq 0 && "${changed}" -eq 0 && "${untracked}" -eq 0 && "${deleted}" -eq 0 ]]; then
-      git_status="${git_status}${green}✔"
-    fi
-
-    git_status="${git_status}${white}]${nc}"
-    echo -e "${git_status}"
+  # change message if running for tmux status
+  if [ "${source}" == "tmux" ]; then
+    sub_msg=""
+    red="#[fg=red]"
+    green="#[fg=green]"
+    blue="#[fg=blue]"
+    nc="#[fg=default]"
+  else
+    sub_msg="${dim} in "
   fi
+
+  kube_symbol="${blue}ﴱ${nc}"
+
+  # change color if in production
+  if [[ "${context}" == *"prod"* ]]; then
+    msg="${sub_msg}${kube_symbol} ${red} ${red}${context}${nc}"
+  else
+    msg="${sub_msg}${kube_symbol} ${green}${context}${nc}"
+  fi
+
+  echo -e "${msg}"
 }
 
 get_ps1() {
-  local nc='\[\033[0m\]'
-  local bold='\[\033[1m\]'
-  local orange='\[\033[38;5;214m\]'
-  local red='\[\033[38;5;1m\]'
-  local rred='\[\033[38;5;196m\]'
-  local yellow='\[\033[1;33m\]'
-  local green='\[\033[1;32m\]'
-  local blue='\[\033[1;34m\]'
-  local teal='\[\033[38;5;14m\]'
-  local white='\[\033[38;5;231m\]'
-  local purple='\[\033[1;35m\]'
-
   # shorten path
   # shellcheck disable=SC2001
   PS1X=$(sed "s:\([^/\.]\)[^/]*/:\1/:g" <<< "${PWD/#$HOME/\~}")
 
   # declare prompt
-  PS1="${teal}${bold}${PS1X}${nc}$(git_prompt)${bold}${orange} λ ${nc}"
+  PS1="${teal}${bold}${PS1X}${nc}$(_git_prompt)$(kube_prompt)${bold}\n${orange}λ ${nc}"
 }
 
-# helpers
+# Helpers -----------------------
 _fzf_down() {
   fzf --height 50% "$@" --border
 }
@@ -357,6 +282,126 @@ _fzf_down() {
 _branch_name() {
   git rev-parse --abbrev-ref HEAD 2> /dev/null
 }
+
+# Git Prompt -----------------------
+_git_prompt() {
+  if _git_status; then
+    # set default prompt
+    git_status="${bold} ${bright}on ${purple} ${git_branch}${git_hash}${bold}${purple} [${nc}"
+
+    # ahead/behind from origin
+    if [[ "${git_behind}" -ne 0 || "${git_ahead}" -ne 0 ]]; then
+      [ "${git_behind}" -ne 0 ] && git_status="${git_status}${teal}↓${git_behind}"
+      [ "${git_ahead}" -ne 0 ] && git_status="${git_status}${teal}↑${git_ahead}"
+
+      # set delimeter between ahead/behind and raw stats
+      git_status="${git_status}${purple}|"
+    fi
+
+    # display raw stats
+    [ "${git_staged}" -ne 0 ] && git_status="${git_status}${orange}●${git_staged}"
+    [ "${git_conflicts}" -ne 0 ] && git_status="${git_status}${blue}✘${git_conflicts}"
+    [ "${git_changed}" -ne 0 ] && git_status="${git_status}${green}✚${git_changed}"
+    [ "${git_deleted}" -ne 0 ] && git_status="${git_status}${red}-${git_deleted}"
+    [ "${git_untracked}" -ne 0 ] && git_status="${git_status}${nc}?${git_untracked}"
+
+    # check if clean
+    if [[ "${git_staged}" -eq 0 && "${git_conflicts}" -eq 0 && "${git_changed}" -eq 0 && "${git_untracked}" -eq 0 && "${git_deleted}" -eq 0 ]]; then
+      git_status="${git_status}${green}✔"
+    fi
+
+    git_status="${git_status}${purple}]${nc}"
+    echo -e "${git_status}"
+  fi
+}
+
+_git_parse_branch() {
+  local branch_line=$1
+  IFS="^" read -ra branch_fields <<< "${branch_line}"
+
+  # determine type of branch
+  git_branch="${branch_fields[0]}"
+  hash="HEAD"
+  if [[ "${branch_name}" == *"Initial commit on"* ]]; then
+    git_branch="${fields[3]}"
+  elif [[ "${branch_name}" == *"No commits yet on"* ]]; then
+    git_branch="${fields[4]}"
+  elif [[ "${branch_name}" == *"no branch"* ]]; then
+    git_branch=$(_git_tag_hash)
+  else
+    IFS="[,]" read -ra remote_fields <<< "${branch_fields[@]}"
+    # check if branch is ahead/behind from origin
+    for remote_field in "${remote_fields[@]}"; do
+      if grep -qE 'ahead' <<< "${remote_field}"; then
+        ahead="${remote_field:6}"
+      elif grep -qE 'behind' <<< "${div}"; then
+        behind="${remote_field:7}"
+      fi
+    done
+    git_hash=$(_git_tag_hash)
+  fi
+}
+
+_git_parse_status() {
+  local git_status=$1
+  while IFS='' read -r line || [[ -n "${line}" ]]; do
+    status="${line:0:2}"
+    while [[ -n ${status} ]]; do
+      case "${status}" in
+        # two fixed character matches, loop finished
+        "##") git_branch_line="${line/\.\.\./^}"; git_branch_line="${git_branch_line/\#\# }"; break ;;
+        "??") ((git_untracked++)); break ;;
+        ?U) ((git_conflicts++)); break;;
+        ?D) ((git_deleted++)); break;;
+        # two character matches, first loop
+        ?M) ((git_changed++)) ;;
+        ?D) ((git_changed++)) ;;
+        ? ) ;;
+        # single character matches, second loop
+        U) ((git_conflicts++)) ;;
+        \ ) ;;
+        *) ((git_staged++)) ;;
+      esac
+      status="${status:0:$((${#status}-1))}"
+    done
+  done <<< "${git_status}"
+}
+
+_git_tag_hash() {
+  local hash tag
+  tag=$(git describe --tags --exact-match 2> /dev/null)
+  hash=$(git rev-parse --short HEAD 2> /dev/null)
+  if [[ -n "${hash}" ]]; then
+    echo "  ${hash}"
+  elif [[ -n "${tag}" ]]; then
+    echo " 炙${tag}"
+  else
+    return
+  fi
+}
+
+_git_status() {
+  # grab raw status from git
+  git_status=$(git status --porcelain --branch 2> /dev/null) || return
+
+  # set default variables
+  git_branch=""
+  git_hash=""
+  git_untracked=0
+  git_staged=0
+  git_changed=0
+  git_conflicts=0
+  git_deleted=0
+  git_ahead=0
+  git_behind=0
+
+  # parse the git status
+  _git_parse_status "${git_status}"
+
+  # create git branch
+  _git_parse_branch "${git_branch_line}"
+}
+
 
 # Custom init apps ------------------------
 command_init fasd --init auto
