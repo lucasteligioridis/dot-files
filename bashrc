@@ -38,7 +38,7 @@ alias sssh="ssh -q -o BatchMode=yes -o UserKnownHostsFile=/dev/null -o StrictHos
 alias chromium="command chromium --audio-buffer-size=2048"
 alias ls="ls --color=auto --group-directories-first"
 alias tree="ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'"
-alias grep='grep --exclude="*.pyc" --exclude="*.swp" --exclude="*.tfstate.backup" --color=always --exclude-dir=.terraform --exclude-dir=.git'
+alias grep='grep --exclude="*.pyc" --exclude="*.swp" --exclude="*.tfstate.backup" --color=auto --exclude-dir=.terraform --exclude-dir=.git'
 alias v="vf" # quick opening files with vim
 alias :q="exit"
 alias 1p="ykman oath code 1p"
