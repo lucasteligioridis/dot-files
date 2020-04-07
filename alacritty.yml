@@ -80,6 +80,13 @@ font:
   normal:
     family: RobotoMono Nerd Font
     style: Medium
+  bold:
+    family: RobotoMono Nerd Font
+    style: Bold
+  italic:
+    family: RobotoMono Nerd Font
+    style: Italic
+
   size: 14.0
   offset:
     x: 0
