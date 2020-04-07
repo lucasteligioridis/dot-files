@@ -293,6 +293,9 @@ bind e set-window-option synchronize-panes
 # send clear history to terminal
 bind -n C-l send-keys C-l
 
+# turn vpn on and off
+bind-key V run "tmux new-window 'bash -ci viscosity'"
+
 # search tmux panes with fzf
 bind-key s run "tmux new-window 'bash -ci fs'"
 
