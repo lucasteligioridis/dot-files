@@ -235,12 +235,29 @@ command_init() {
   fi
 }
 
+on_vpn() {
+  if netstat -nr -f inet | grep utun > /dev/null; then
+    echo "📡"
+  else
+    echo "📶"
+  fi
+}
+
+viscosity() {
+  if netstat -nr -f inet | grep utun > /dev/null; then
+    osascript -e 'tell application "Viscosity" to disconnect "gcp-vpn"'
+  else
+    osascript -e 'tell application "Viscosity" to connect "gcp-vpn"'
+  fi
+}
+
 kube_prompt() {
   local source=${0}
-  local context env
+  local context msg kube_symbol
 
   # grab context from config, this is way fast to fetch
-  context=$(grep "current-context:" ${HOME}/.kube/config | sed "s/current-context: //") || return
+  kube_config="${KUBECONFIG:-${HOME}/.kube/config}"
+  context=$(grep "current-context:" ${kube_config} | sed "s/current-context: //") || return
 
   # change message if running for tmux status
   if [ "${source}" == "tmux" ]; then
