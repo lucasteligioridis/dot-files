@@ -351,9 +351,9 @@ _git_parse_branch() {
     # check if branch is ahead/behind from origin
     for remote_field in "${remote_fields[@]}"; do
       if grep -qE 'ahead' <<< "${remote_field}"; then
-        ahead="${remote_field:6}"
-      elif grep -qE 'behind' <<< "${div}"; then
-        behind="${remote_field:7}"
+        git_ahead="${remote_field:6}"
+      elif grep -qE 'behind' <<< "${remote_field}"; then
+        git_behind="${remote_field:7}"
       fi
     done
     git_hash=$(_git_tag_hash)
