@@ -266,6 +266,7 @@ kube_prompt() {
     green="#[fg=green]"
     blue="#[fg=blue]"
     nc="#[fg=default]"
+    sub_msg="| "
   else
     sub_msg="${dim} in "
   fi
@@ -274,7 +275,7 @@ kube_prompt() {
 
   # change color if in production
   if [[ "${context}" == *"prod"* ]]; then
-    msg="${sub_msg}${kube_symbol} ${red} ${red}${context}${nc}"
+    msg="${sub_msg}${kube_symbol} ${red} ${context}${nc}"
   else
     msg="${sub_msg}${kube_symbol} ${green}${context}${nc}"
   fi
