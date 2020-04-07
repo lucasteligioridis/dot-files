@@ -136,14 +136,22 @@ vfind() {
 
 # diff git commit
 flog() {
-  hash=$(git log --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" | fzf | awk '{print $1}')
+  local hash
+  hash=$(git log --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "${@}" | fzf | awk '{print $1}')
   echo "${hash}" | xclip
   git showtool "${hash}"
 }
 
+# create a pr locally and open in browser
+pr() {
+  local reviewers=${1}
+  git pull-request -p -a "lucasteligioridis" -o -r "${reviewers}" -c
+}
+
 # search git commits and find hash
 gc() {
-  hash=$(git log --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" | fzf | awk '{print $1}')
+  local hash
+  hash=$(git log --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "${@}" | fzf | awk '{print $1}')
   [[ -n "${hash}" ]] && gopen "${hash}"
 }
 
