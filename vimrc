@@ -66,6 +66,7 @@ Plug 'tpope/vim-surround'                                         " Operate on s
 Plug 'tpope/vim-repeat'                                           " Repeat plugins
 Plug 'tpope/vim-commentary'                                       " Comment out blocks
 Plug 'tpope/vim-fugitive'                                         " Git integration
+Plug 'tpope/vim-rhubarb'                                          " Enables fugitive to open Git URLs
 Plug 'tpope/vim-abolish'                                          " Flexible search
 
 " Appearance
