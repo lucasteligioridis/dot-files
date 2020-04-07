@@ -113,14 +113,14 @@ fvim() {
   local IFS=$'\n'
   local files
   mapfile -t files < <(fzf-tmux --query="${1}" --multi --select-1 --exit-0)
-  [[ -n "${files[*]}" ]] && ${EDITOR} "${files[@]}"
+  [[ -n "${files[*]}" ]] && history -s ${EDITOR} -p "${files[@]}" && ${EDITOR} -p "${files[@]}"
 }
 
 # vim with fasd and fzf
 vf() {
   local file
-  file="$(fasd -Rfl "$1" | fzf --height 40% -1 -0 --no-sort +m)"
-  [[ -n "${file}" ]] && ${EDITOR} "${file}"
+  mapfile -t files < <(fasd -Rfl "$1" | fzf --height 40% -1 -0 --no-sort +m)
+  [[ -n "${files[*]}" ]] && history -s ${EDITOR} -p "${files}" && ${EDITOR} -p "${files}"
 }
 
 # search for string in all files recursively in current directory and open with vim
@@ -131,7 +131,7 @@ vfind() {
   exclude=".config,.git,.lock,**/.terraform"
   rg_command='rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --no-messages --color "always" -g "!{'${exclude}'}/*"'
   mapfile -t files < <(eval "${rg_command}" "${search}" | fzf --ansi --multi --reverse | awk -F ':' '{print $1":"$2":"$3}')
-  [[ -n "${files[*]}" ]] && ${EDITOR} -p "${files[@]}"
+  [[ -n "${files[*]}" ]] && history -s ${EDITOR} -p "${files[@]}" && ${EDITOR} -p "${files[@]}"
 }
 
 # diff git commit
