@@ -15,11 +15,11 @@ HISTTIMEFORMAT='%F %T ' # use standard ISO time format
 case "${OSTYPE}" in
   linux*)
     os_open="xdg-open"
-    c_path="${HOME}/.config/chromium"
+    f_path="${HOME}/.config/firefox"
   ;;
   darwin*)
     os_open="open"
-    c_path="${HOME}/Library/Application Support/Google/Chrome"
+    f_path="${HOME}/Library/Application Support/Firefox/Profiles"
   ;;
 esac
 
@@ -35,7 +35,6 @@ shopt -s globstar     # turn on recursive globbing
 
 # Aliases --------------------------
 alias sssh="ssh -q -o BatchMode=yes -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -t"
-alias chromium="command chromium --audio-buffer-size=2048"
 alias ls="ls --color=auto --group-directories-first"
 alias tree="ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'"
 alias grep='grep --exclude="*.pyc" --exclude="*.swp" --exclude="*.tfstate.backup" --color=auto --exclude-dir=.terraform --exclude-dir=.git'
@@ -186,16 +185,16 @@ branch() {
   git checkout "$(echo "${branch}" | sed "s/.* //" | sed "s#remotes/[^/]*/##")"
 }
 
-# search chrome/chromium history and launch in browser
-ch() {
-  local cols sep c_history
+# search firefox history and launch in browser
+fh() {
+  local cols sep f_history
   cols=$(( COLUMNS / 3 ))
   sep='{::}'
-  c_history="${c_path}/Default/History"
-  cp -f "${c_history}" /tmp/h
+  f_history=$(find "${f_path}"/*.default-release -iname places.sqlite)
+  cp -f "${f_history}" /tmp/h
   sqlite3 -separator ${sep} /tmp/h \
     "select substr(title, 1, ${cols}), url
-     from urls order by last_visit_time desc" |
+     from moz_places order by last_visit_date desc" |
   awk -F ${sep} '{printf "%-'${cols}'s  \x1b[36m%s\x1b[m\n", $1, $2}' |
   fzf --ansi --multi --query="!localhost " | sed 's#.*\(https*://\)#\1#' | xargs "${os_open}" > /dev/null 2> /dev/null
 }
