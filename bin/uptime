@@ -1,0 +1,28 @@
+#!/bin/bash
+set -euo pipefail
+
+case "${OSTYPE}" in
+  darwin*)
+    boot=$(sysctl -q -n kern.boottime | awk -F'[ ,:]+' '{ print $4 }')
+    now=$(date +%s)
+    ;;
+  linux*)
+    boot=0
+    now=$(cut -d' ' -f1 < /proc/uptime)
+    ;;
+esac
+
+uptime=$((now-boot))
+year=$((uptime/31536000))
+day_year=$(((uptime/86400) % 365))
+day=$((uptime/86400))
+hour=$(((uptime/3600) % 24))
+minute=$(((uptime/60) % 60))
+
+[ "${year}" -ne 0 ] && y="${year}y "
+[ "${day}" -ne 0 ] && d="${day}d "
+[ "${day_year}" -ne 0 ] && d="${day_year}d "
+[ "${hour}" -ne 0 ] && h="${hour}h "
+[ "${minute}" -ne 0 ] && m="${minute}m"
+
+echo "${y:-}${d:-}${h:-}${m:-}"
