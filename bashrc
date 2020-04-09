@@ -97,16 +97,6 @@ tm() {
   session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0) && tmux ${change} -t "${session}" || echo "No sessions found."
 }
 
-fs() {
-	local -r fmt='#{session_id}:|#S|(#{session_attached} attached)'
-	{ tmux display-message -p -F "${fmt}" && tmux list-sessions -F "${fmt}"; } \
-		| awk '!seen[$1]++' \
-		| column -t -s "|" \
-		| fzf -q "$" --reverse --prompt "switch session: " -1 \
-		| cut -d ":" -f1 \
-		| xargs tmux switch-client -t
-}
-
 # search current directory for all files recursively and open with vim
 fvim() {
   local IFS=$'\n'
