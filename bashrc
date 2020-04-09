@@ -250,31 +250,39 @@ viscosity() {
 
 kube_prompt() {
   local source=${0}
-  local context msg kube_symbol
+  local context sub_msg msg kube_symbol
+
+  # only display prompt if using a KUBECONFIG or within tmux status.
+  # Reason is so we dont flood information in redundant places,
+  # the tmux status will be the main source of truth and the bash prompt
+  # should only display if we are overriding the current context within the shell.
+  if [[ -z "${KUBECONFIG}" && "${source}" != "tmux" ]]; then
+    return
+  fi
 
   # grab context from config, this is way fast to fetch
   kube_config="${KUBECONFIG:-${HOME}/.kube/config}"
   context=$(grep "current-context:" ${kube_config} | sed "s/current-context: //") || return
 
-  # change message if running for tmux status
+  # display correct colors and message for tmux status
   if [ "${source}" == "tmux" ]; then
-    sub_msg=""
-    red="#[fg=red]"
-    green="#[fg=green]"
-    blue="#[fg=blue]"
+    red="#[fg=#e06c75]"
+    green="#[fg=#98c379]"
+    blue="#[fg=#61afef]"
     nc="#[fg=default]"
-    sub_msg="| "
+    sub_msg=" "
   else
     sub_msg="${dim} in "
   fi
 
   kube_symbol="${blue}ﴱ${nc}"
+  msg="${sub_msg:-}${kube_symbol} ${green}${context}${nc}"
 
-  # change color if in production
+  # change color if in production and elevated access
   if [[ "${context}" == *"prod"* ]]; then
-    msg="${sub_msg}${kube_symbol} ${red} ${context}${nc}"
-  else
-    msg="${sub_msg}${kube_symbol} ${green}${context}${nc}"
+    if ! grep -A4 "${current_context}" "${kube_config}" | grep -Eo "\- name:(.*)" | grep -qE "gke"; then
+      msg="${sub_msg:-}${kube_symbol} ${red} ${context}${nc}"
+    fi
   fi
 
   echo -e "${msg}"
