@@ -250,13 +250,19 @@ viscosity() {
 
 kube_prompt() {
   local source=${0}
-  local context sub_msg msg kube_symbol
+  local context
+  local symbol=""
+  local red="#[fg=#e06c75]"
+  local green="#[fg=#98c379]"
+  local blue="#[fg=#61afef]"
+  local nc="#[fg=default]"
 
   # only display prompt if using a KUBECONFIG or within tmux status.
   # Reason is so we dont flood information in redundant places,
-  # the tmux status will be the main source of truth and the bash prompt
+  # the tmux status will be the main source of truth and the tmux pane
   # should only display if we are overriding the current context within the shell.
   if [[ -z "${KUBECONFIG}" && "${source}" != "tmux" ]]; then
+    tmux set -p @kube_prompt 0
     return
   fi
 
@@ -264,37 +270,33 @@ kube_prompt() {
   kube_config="${KUBECONFIG:-${HOME}/.kube/config}"
   context=$(grep "current-context:" ${kube_config} | sed "s/current-context: //") || return
 
-  # display correct colors and message for tmux status
-  if [ "${source}" == "tmux" ]; then
-    red="#[fg=#e06c75]"
-    green="#[fg=#98c379]"
-    blue="#[fg=#61afef]"
-    nc="#[fg=default]"
-    sub_msg=" "
-  else
-    sub_msg="${dim} in "
-  fi
-
-  kube_symbol="${blue}ﴱ${nc}"
-  msg="${sub_msg:-}${kube_symbol} ${green}${context}${nc}"
+  local kube_symbol="${blue}ﴱ${nc}"
+  local kube_severity="${green}${context}${nc}"
 
   # change color if in production and elevated access
   if [[ "${context}" == *"prod"* ]]; then
     if ! grep -A4 "${current_context}" "${kube_config}" | grep -Eo "\- name:(.*)" | grep -qE "gke"; then
-      msg="${sub_msg:-}${kube_symbol} ${red} ${context}${nc}"
+      kube_severity="${red} ${context} ${nc}"
     fi
   fi
 
-  echo -e "${msg}"
+  # format message
+  if [ "${source}" == "tmux" ]; then
+    symbol=" "
+    echo -e "${symbol}${kube_symbol} ${kube_severity}"
+  else
+    tmux set -p @kube_prompt "${symbol}${kube_symbol} ${kube_severity}"
+  fi
 }
 
 get_ps1() {
+  tmux set -p @status $?
+  kube_prompt
   # shorten path
   # shellcheck disable=SC2001
   PS1X=$(sed "s:\([^/\.]\)[^/]*/:\1/:g" <<< "${PWD/#$HOME/\~}")
-
   # declare prompt
-  PS1="${teal}${bold}${PS1X}${nc}$(_git_prompt)$(kube_prompt)${bold}\n${orange}λ ${nc}"
+  PS1="${teal}${bold}${PS1X}${nc}$(_git_prompt)${bold}\n${orange}λ ${nc}"
 }
 
 # Helpers -----------------------
@@ -425,9 +427,8 @@ _git_status() {
   _git_parse_branch "${git_branch_line}"
 }
 
-
 # Custom init apps ------------------------
-command_init fasd --init auto
+command_init fasd --init posix-alias bash-ccomp bash-ccomp-install
 command_init pyenv init -
 command_init rbenv init -
 command_init nodenv init -
