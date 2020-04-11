@@ -1,6 +1,10 @@
 #!/bin/bash
+set -euo pipefail
+
 count=0
 charge=0
+discharging=true
+
 case "${OSTYPE}" in
   darwin*)
     while IFS= read -r line; do

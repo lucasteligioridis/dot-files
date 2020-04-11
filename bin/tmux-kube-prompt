@@ -1,0 +1,42 @@
+#!/bin/bash
+set -euo pipefail
+
+source=${1:-}
+context=""
+symbol=""
+red="#[fg=#e06c75]"
+green="#[fg=#98c379]"
+blue="#[fg=#61afef]"
+nc="#[fg=default]"
+
+# only display prompt if using a KUBECONFIG or within tmux status.
+# Reason is so we dont flood information in redundant places,
+# the tmux status will be the main source of truth and the tmux pane
+# should only display if we are overriding the current context within the shell.
+if [[ -z "${KUBECONFIG:-}" && "${source}" != "tmux" ]]; then
+  tmux set -p @kube_prompt 0
+  exit 0
+fi
+
+# grab context from config, this is way fast to fetch
+kube_config="${KUBECONFIG:-${HOME}/.kube/config}"
+context=$(grep "current-context:" ${kube_config} | sed "s/current-context: //") || exit 0
+
+# default kube status
+kube_symbol="${blue}ﴱ${nc}"
+kube_severity="${green}${context}${nc}"
+
+# change color if in production and elevated access
+if [[ "${context}" == *"prod"* ]]; then
+  if ! grep -A4 "${context}" "${kube_config}" | grep -Eo "\- name:(.*)" | grep -qE "gke"; then
+    kube_severity="${red} ${context} ${nc}"
+  fi
+fi
+
+# format message
+if [ "${source}" == "tmux" ]; then
+  symbol=" "
+  echo -e "${symbol}${kube_symbol} ${kube_severity}"
+else
+  tmux set -p @kube_prompt "${symbol}${kube_symbol} ${kube_severity}"
+fi
