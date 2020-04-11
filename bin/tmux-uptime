@@ -12,6 +12,7 @@ case "${OSTYPE}" in
     ;;
 esac
 
+now="${now%\.*}" # remove any floating points
 uptime=$((now-boot))
 year=$((uptime/31536000))
 day_year=$(((uptime/86400) % 365))
