@@ -2,7 +2,6 @@
 
 ### Shells
 - Bash
-- Zsh
 
 ### Version Control
 - Git
