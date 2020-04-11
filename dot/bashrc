@@ -299,10 +299,12 @@ _git_parse_branch() {
     IFS="[,]" read -ra remote_fields <<< "${branch_fields[@]}"
     # check if branch is ahead/behind from origin
     for remote_field in "${remote_fields[@]}"; do
-      if grep -qE 'ahead' <<< "${remote_field}"; then
-        git_ahead="${remote_field:6}"
-      elif grep -qE 'behind' <<< "${remote_field}"; then
-        git_behind="${remote_field:7}"
+      if [[ "${remote_field}" == *"ahead"* ]]; then
+        git_ahead="$(grep -Eo 'ahead (.*)' <<< "${remote_field}")"
+        git_ahead="${git_ahead##* }"
+      elif [[ "${remote_field}" == *"behind"* ]]; then
+        git_behind="$(grep -Eo 'behind (.*)' <<< "${remote_field}")"
+        git_behind="${git_behind##* }"
       fi
     done
     git_hash=$(_git_tag_hash)
