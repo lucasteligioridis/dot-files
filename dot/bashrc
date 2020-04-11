@@ -269,7 +269,7 @@ _git_prompt() {
     # display raw stats
     [ "${git_staged}" -ne 0 ] && git_status="${git_status}${orange}●${git_staged}"
     [ "${git_conflicts}" -ne 0 ] && git_status="${git_status}${blue}✘${git_conflicts}"
-    [ "${git_changed}" -ne 0 ] && git_status="${git_status}${green}✚${git_changed}"
+    [ "${git_changed}" -ne 0 ] && git_status="${git_status}${green}+${git_changed}"
     [ "${git_deleted}" -ne 0 ] && git_status="${git_status}${red}-${git_deleted}"
     [ "${git_untracked}" -ne 0 ] && git_status="${git_status}${nc}?${git_untracked}"
 

@@ -224,7 +224,7 @@ cursor:
 live_config_reload: true
 
 shell:
-  program: /usr/local/bin/bash
+  program: /bin/bash
   args:
     - --login
     - -c
