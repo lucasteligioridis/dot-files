@@ -289,12 +289,11 @@ _git_parse_branch() {
 
   # determine type of branch
   git_branch="${branch_fields[0]}"
-  hash="HEAD"
-  if [[ "${branch_name}" == *"Initial commit on"* ]]; then
+  if [[ "${git_branch}" == *"Initial commit on"* ]]; then
     git_branch="${fields[3]}"
-  elif [[ "${branch_name}" == *"No commits yet on"* ]]; then
+  elif [[ "${git_branch}" == *"No commits yet on"* ]]; then
     git_branch="${fields[4]}"
-  elif [[ "${branch_name}" == *"no branch"* ]]; then
+  elif [[ "${git_branch}" == *"no branch"* ]]; then
     git_branch=$(_git_tag_hash)
   else
     IFS="[,]" read -ra remote_fields <<< "${branch_fields[@]}"
