@@ -1,0 +1,18 @@
+#!/bin/bash
+set -euo pipefail
+
+option=${1:-}
+
+if [ "${option}" == "toggle" ]; then
+  if netstat -nr -f inet | grep utun > /dev/null; then
+    osascript -e 'tell application "Viscosity" to disconnect "gcp-vpn"'
+  else
+    osascript -e 'tell application "Viscosity" to connect "gcp-vpn"'
+  fi
+else
+  if netstat -nr -f inet | grep utun > /dev/null; then
+    echo "📡"
+  else
+    echo "📶"
+  fi
+fi
