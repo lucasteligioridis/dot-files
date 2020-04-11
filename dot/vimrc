@@ -105,8 +105,9 @@ set nocompatible
 set mouse=a
 
 " use system clipboard
+let g:loaded_clipboard_provider = 1
 set clipboard=unnamed
-set clipboard=unnamedplus
+set clipboard+=unnamedplus
 
 " search settings
 set incsearch
