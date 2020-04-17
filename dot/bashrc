@@ -105,7 +105,7 @@ fvim() {
 vf() {
   local file
   mapfile -t files < <(fasd -Rfl "$1" | fzf --height 40% -1 -0 --no-sort +m)
-  [[ -n "${files[*]}" ]] && history -s ${EDITOR} -p "${files}" && ${EDITOR} -p "${files}"
+  [[ -n "${files[*]}" ]] && history -s ${EDITOR} -p "${files[@]}" && ${EDITOR} -p "${files[@]}"
 }
 
 # search for string in all files recursively in current directory and open with vim
