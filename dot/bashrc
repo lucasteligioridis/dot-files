@@ -286,9 +286,9 @@ _git_parse_branch() {
   # determine type of branch
   git_branch="${branch_fields[0]}"
   if [[ "${git_branch}" == *"Initial commit on"* ]]; then
-    git_branch="${fields[3]}"
+    git_branch="${branch_fields[3]}"
   elif [[ "${git_branch}" == *"No commits yet on"* ]]; then
-    git_branch="${fields[4]}"
+    git_branch="${branch_fields[4]}"
   elif [[ "${git_branch}" == *"no branch"* ]]; then
     git_branch=$(_git_tag_hash)
   else
