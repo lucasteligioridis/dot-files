@@ -230,12 +230,12 @@ command_init() {
 
 get_ps1() {
   tmux set -p @status $?
-  [ -f ${HOME}/bin/tmux-kube-prompt ] && ${HOME}/bin/tmux-kube-prompt
+  [ -f "${HOME}/bin/tmux-kube-prompt" ] && "${HOME}/bin/tmux-kube-prompt"
   # shorten path
   # shellcheck disable=SC2001
-  PS1X=$(sed "s:\([^/\.]\)[^/]*/:\1/:g" <<< "${PWD/#$HOME/\~}")
+  PS1X=$(sed "s:\\([^/\\.]\\)[^/]*/:\\1/:g" <<< "${PWD/#$HOME/\~}")
   # declare prompt
-  PS1="${teal}${bold}${PS1X}${nc}$(_git_prompt)${bold}\n${orange}λ ${nc}"
+  PS1="${teal}${bold}${PS1X}${nc}$(_git_prompt)${bold}\\n${orange}λ ${nc}"
 }
 
 # Helpers -----------------------
