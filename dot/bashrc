@@ -223,8 +223,12 @@ sbs() {
 
 # file search
 sfind() { find . -iname "*${1}*" "${@:2}"; }
-rgrep() { grep "${1}" "${@:2}" -R .; }
-sgrep() { grep -rsin "${1}" -- *; }
+rgrep() {
+  local search=${1}
+  exclude=".config,.git,.lock,**/.terraform"
+  rg_command='rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --no-messages --color "always" -g "!{'${exclude}'}/*"'
+  eval "${rg_command}" "${1}" -- *;
+}
 
 # check if command exists and run custom startup
 command_init() {
