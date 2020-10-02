@@ -1,0 +1,11 @@
+#!/bin/bash
+set -euo pipefail
+
+fmt="#{session_id}:|#S|(#{session_attached} attached)"
+sessions="$(tmux list-sessions -F "${fmt}" | awk '!seen[$1]++' | column -t -s "|" | fzf -q "$" --reverse --multi --prompt "kill session: " -1 | cut -d ":" -f1)"
+
+# kill all selected sessions
+for session in ${sessions}; do
+  echo "Killing ${session}"
+  tmux kill-session -t "${session}"
+done
