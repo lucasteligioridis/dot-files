@@ -628,7 +628,7 @@ augroup END
 set statusline+=%{FugitiveStatusline()}
 
 " Terraform -------------------------
-let g:terraform_align=1
+let g:terraform_align=0
 let g:terraform_completion_keys = 1
 autocmd FileType terraform setlocal commentstring=//%s
 
