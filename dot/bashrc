@@ -148,6 +148,15 @@ gh() {
   grep -o "[a-f0-9]\\{7,\\}"
 }
 
+# search git commits and launch interactively
+gir() {
+  git log --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "${@}" |
+  _fzf_down --ansi --no-sort --reverse --multi \
+    --preview 'grep -o "[a-f0-9]\{7,\}" <<< {} | xargs git show --color=always | head -200' |
+  grep -o "[a-f0-9]\\{7,\\}" |
+  xargs -I% git rebase -i %~
+}
+
 # open git commit in browser
 gopen() {
   local hash=${1}
