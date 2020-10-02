@@ -128,7 +128,7 @@ flog() {
 # create a pr locally and open in browser
 pr() {
   local reviewers=${1}
-  git pull-request -p -a "lucasteligioridis" -o -r "${reviewers}" -c
+  hub pull-request -p -a "lucasteligioridis" -o -r "${reviewers}" -c
 }
 
 # search git commits and find hash
