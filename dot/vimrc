@@ -126,7 +126,9 @@ set cursorline
 set expandtab " tabs -> spaces
 set tabstop=2
 set wrap
+set linebreak
 set list lcs=tab:\▏\ " add indent line for tabs
+set formatoptions+=j
 
 " bash like tab completion
 set wildmode=longest,list,full
