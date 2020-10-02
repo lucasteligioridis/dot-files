@@ -32,7 +32,7 @@ Plug 'Xuyuanp/nerdtree-git-plugin'                                " Git for Nerd
 Plug 'jistr/vim-nerdtree-tabs'                                    " NerdTree independent of tabs
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Install fzf for user
 Plug 'junegunn/fzf.vim'                                           " Fzf vim plugin
-Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}        " coc.nvim autocomplete
+Plug 'neoclide/coc.nvim', {'branch': 'release'}                   " coc.nvim autocomplete
 Plug 'majutsushi/tagbar'                                          " Tag bar
 
 " Small utilities
