@@ -5,6 +5,9 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
+# source external helpers
+source "${HOME}/bin/colors.sh"
+
 # don't put duplicate lines or lines starting with space in the history
 HISTCONTROL=ignoreboth:erasedups:ignorespace
 HISTSIZE=100000
@@ -66,17 +69,6 @@ export LESS_TERMCAP_se=$'\E[0m'
 export LESS_TERMCAP_so=$'\E[01;44;33m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;32m'
-
-# Colors --------------------------
-nc='\[\033[0m\]'
-bold='\[\033[1m\]'
-bright='\[\033[1;37m\]'
-orange='\[\033[38;5;214m\]'
-red='\[\033[31m\]'
-green='\[\033[1;32m\]'
-blue='\[\033[1;34m\]'
-teal='\[\033[38;5;14m\]'
-purple='\[\033[1;35m\]'
 
 # Binds ---------------------------
 bind -x '"\C-f": fvim'
