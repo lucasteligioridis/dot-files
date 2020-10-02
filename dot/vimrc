@@ -231,6 +231,9 @@ imap  <C-W>
 map <C-BS> <C-W>
 imap <C-BS> <C-W>
 
+" Get a list of yanks and paste
+nnoremap <silent> <leader>y  :<C-u>CocList -A --normal yank<cr>
+
 " re-launch vim as sudo
 cmap w!! w !sudo tee % >/dev/null
 
