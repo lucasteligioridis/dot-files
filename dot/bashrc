@@ -77,7 +77,40 @@ export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;32m'
 
 # Binds ---------------------------
+stty werase undef
 bind -x '"\C-f": fvim'
+
+bind -m vi-command '"\C-w": emacs-editing-mode'
+bind -m vi-insert '"\C-w": emacs-editing-mode'
+bind -m emacs-standard '"\C-w": vi-editing-mode'
+
+# Insert mode
+bind -m vi-insert '"jj": vi-movement-mode'
+bind -m vi-insert '"\C-p": previous-history'
+bind -m vi-insert '"\C-n": next-history'
+bind -m vi-insert '"\C-e": end-of-line'
+bind -m vi-insert '"\C-a": beginning-of-line'
+bind -m vi-insert '"\C-x": backward-kill-line'
+bind -m vi-insert '"\ex": backward-kill-word'
+bind -m vi-insert '"\ef": forward-word'
+bind -m vi-insert '"\eb": backward-word'
+# Cycle forward with TAB and backwards with S-Tab when using menu-complete
+bind -m vi-insert '"\C-i": menu-complete'
+bind -m vi-insert '"\e[Z": menu-complete-backward'
+
+# Command (normal) mode
+bind -m vi-command '"H": beginning-of-line'
+bind -m vi-command '"L": end-of-line'
+bind -m vi-command '"k": ""'
+bind -m vi-command '"j": ""'
+bind -m vi-command '"v": ""' # Don't edit command with default editor (nvim)
+bind -m vi-command '"\C-e": edit-and-execute-command'
+
+# Bind C-p and C-n to search the history conditional on input (like zsh) instead
+# of simply going up or down (note: we cannot seem to set this in the inputrc so
+# we do it here instead)
+bind '"\C-p": history-search-backward'
+bind '"\C-n": history-search-forward'
 
 # Functions -----------------------
 
