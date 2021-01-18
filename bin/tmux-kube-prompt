@@ -20,17 +20,15 @@ fi
 
 # grab context from config, this is way fast to fetch
 kube_config="${KUBECONFIG:-${HOME}/.kube/config}"
-context=$(grep "current-context:" ${kube_config} | sed "s/current-context: //") || exit 0
+context=$(grep "current-context:" "${kube_config}" | sed "s/current-context: //") || exit 0
 
 # default kube status
 kube_symbol="${blue}ﴱ${nc}"
 kube_severity="${green}${context}${nc}"
 
-# change color if in production and elevated access
-if [[ "${context}" == *"prod"* ]]; then
-  if ! grep -A4 "${context}" "${kube_config}" | grep -Eo "\- name:(.*)" | grep -qE "gke"; then
-    kube_severity="${red} ${context} ${nc}"
-  fi
+# change color if in production
+if [[ "${context}" =~ "prod" ]]; then
+  kube_severity="${red} ${context} ${nc}"
 fi
 
 # format message
