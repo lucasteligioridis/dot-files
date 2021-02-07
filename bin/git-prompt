@@ -7,32 +7,34 @@ source "${HOME}/bin/colors.sh"
 # Git Prompt -----------------------
 _git_prompt() {
   if _git_status; then
-    # set default prompt
-    git_status="${BOLD} ${BRIGHT}on ${PURPLE} ${git_branch}${git_hash}${BOLD}${PURPLE} [${NC}"
+    local stats
+    local prefix="${BOLD} ${BRIGHT}on ${PURPLE} ${git_branch}${git_hash}${BOLD}"
 
     # ahead/behind from origin
     if [[ "${git_behind}" -ne 0 || "${git_ahead}" -ne 0 ]]; then
-      [ "${git_behind}" -ne 0 ] && git_status="${git_status}${TEAL}↓${git_behind}"
-      [ "${git_ahead}" -ne 0 ] && git_status="${git_status}${TEAL}↑${git_ahead}"
+      [ "${git_behind}" -ne 0 ] && behind="${TEAL}↓${git_behind}"
+      [ "${git_ahead}" -ne 0 ] && ahead="${TEAL}↑${git_ahead}"
 
       # set delimeter between ahead/behind and raw stats
-      git_status="${git_status}${PURPLE}|"
+      ahead_behind="${behind:-}${ahead:-}${PURPLE}|"
     fi
 
-    # display raw stats
-    [ "${git_staged}" -ne 0 ] && git_status="${git_status}${ORANGE}●${git_staged}"
-    [ "${git_conflicts}" -ne 0 ] && git_status="${git_status}${BLUE}✘${git_conflicts}"
-    [ "${git_changed}" -ne 0 ] && git_status="${git_status}${GREEN}+${git_changed}"
-    [ "${git_deleted}" -ne 0 ] && git_status="${git_status}${RED}-${git_deleted}"
-    [ "${git_untracked}" -ne 0 ] && git_status="${git_status}${NC}?${git_untracked}"
+    # display raw stats with symbols
+    [ "${git_staged}" -ne 0 ] && staged="${ORANGE}●${git_staged}"
+    [ "${git_conflicts}" -ne 0 ] && conflicts="${BLUE}✘${git_conflicts}"
+    [ "${git_modified}" -ne 0 ] && modified="${GREEN}+${git_modified}"
+    [ "${git_deleted}" -ne 0 ] && deleted="${RED}-${git_deleted}"
+    [ "${git_untracked}" -ne 0 ] && untracked="${NC}?${git_untracked}"
 
-    # check if clean
-    if [[ "${git_staged}" -eq 0 && "${git_conflicts}" -eq 0 && "${git_changed}" -eq 0 && "${git_untracked}" -eq 0 && "${git_deleted}" -eq 0 ]]; then
-      git_status="${git_status}${GREEN}✔"
+    # prompt structure example: [↓1↑2|●1✘2+4-5?6]
+    stats="${ahead_behind:-}${staged:-}${conflicts:-}${modified:-}${deleted:-}${untracked:-}"
+
+    # prompt as clean if nothing else is set
+    if [ -z "${stats}" ]; then
+      stats="${GREEN}✔"
     fi
 
-    git_status="${git_status}${PURPLE}]${NC}"
-    echo -e "${git_status}"
+    echo -e "${prefix} ${PURPLE}[${NC}${stats}${PURPLE}]${NC}"
   fi
 }
 
@@ -76,8 +78,8 @@ _git_parse_status() {
         ?U) ((git_conflicts++)); break;;
         ?D) ((git_deleted++)); break;;
         # two character matches, first loop
-        ?M) ((git_changed++)) ;;
-        ?D) ((git_changed++)) ;;
+        ?M) ((git_modified++)) ;;
+        ?D) ((git_modified++)) ;;
         ? ) ;;
         # single character matches, second loop
         U) ((git_conflicts++)) ;;
@@ -90,9 +92,8 @@ _git_parse_status() {
 }
 
 _git_tag_hash() {
-  local hash tag
-  tag=$(git describe --tags --exact-match 2> /dev/null)
-  hash=$(git rev-parse --short HEAD 2> /dev/null)
+  local tag; tag=$(git describe --tags --exact-match 2> /dev/null)
+  local hash; hash=$(git rev-parse --short HEAD 2> /dev/null)
   if [[ -n "${hash}" ]]; then
     echo "  ${hash}"
   elif [[ -n "${tag}" ]]; then
@@ -106,12 +107,13 @@ _git_status() {
   # grab raw status from git
   git_status=$(git status --porcelain --branch 2> /dev/null) || return
 
-  # set default variables
+  # set default variables which are modified and changed from the
+  # _git_parse_status function
   git_branch=""
   git_hash=""
   git_untracked=0
   git_staged=0
-  git_changed=0
+  git_modified=0
   git_conflicts=0
   git_deleted=0
   git_ahead=0
