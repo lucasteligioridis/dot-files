@@ -368,7 +368,7 @@ nnoremap <silent> <M-\> :TmuxNavigatePrevious<cr>
 " Colours and themes
 
 if (has('termguicolors'))
-    set termguicolors
+  set termguicolors
 endif
 
 " Enable 256 colours
