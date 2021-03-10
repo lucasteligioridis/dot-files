@@ -46,8 +46,8 @@ alias 1p="ykman oath code 1p"
 
 # 3rd party applications --------------------------
 if type "lsd" > /dev/null 2>&1; then
-  alias ls="lsd -F --color=auto"
-  cd() { builtin cd "$@" && lsd -F --color=auto; }
+  alias ls="lsd -F --color=auto --group-dirs first"
+  cd() { builtin cd "$@" && lsd -F --color=auto --group-dirs first; }
 fi
 
 # Prompt ----------------------------
