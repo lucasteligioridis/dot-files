@@ -145,7 +145,7 @@
 [user]
   name = Lucas Teligioridis
   email = lucas.teligioridis@gmail.com
-  signingkey = 0x3447B1952DF0771E
+  signingkey = 0xF8CB5782955395B6
 [credential]
 	helper = store
 [commit]
