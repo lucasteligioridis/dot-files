@@ -26,15 +26,16 @@ _git_prompt() {
     [ "${git_deleted}" -ne 0 ] && deleted="${RED}-${git_deleted}"
     [ "${git_untracked}" -ne 0 ] && untracked="${NC}?${git_untracked}"
 
-    # prompt structure example: [↓1↑2|●1✘2+4-5?6]
-    stats="${ahead_behind:-}${staged:-}${conflicts:-}${modified:-}${deleted:-}${untracked:-}"
+    # consolidate all git stats
+    stats="${staged:-}${conflicts:-}${modified:-}${deleted:-}${untracked:-}"
 
     # prompt as clean if nothing else is set
     if [ -z "${stats}" ]; then
       stats="${GREEN}✔"
     fi
 
-    echo -e "${prefix} ${PURPLE}[${NC}${stats}${PURPLE}]${NC}"
+    # prompt structure example: [↓1↑2|●1✘2+4-5?6]
+    echo -e "${prefix} ${PURPLE}[${NC}${ahead_behind:-}${stats}${PURPLE}]${NC}"
   fi
 }
 
