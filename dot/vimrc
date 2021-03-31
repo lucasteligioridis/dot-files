@@ -721,7 +721,6 @@ autocmd FileType dockerfile setlocal autoindent expandtab   tabstop=4 shiftwidth
 " File type formatting
 au BufRead,BufNewFile *.tf         setlocal filetype=terraform
 au BufRead,BufNewFile *.tfvars     setlocal filetype=terraform
-au BufRead,BufNewFile *.tfstate    setlocal filetype=json
 au BufRead,BufNewFile *.parameters setlocal filetype=json
 au BufRead,BufNewFile *.tags       setlocal filetype=json
 au BufRead,BufNewFile *.template   setlocal filetype=yaml
