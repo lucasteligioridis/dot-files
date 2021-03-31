@@ -144,7 +144,7 @@
   path = .gitconfig.user
 [user]
   name = Lucas Teligioridis
-  email = lucas.teligioridis@gmail.com
+  email = lucas@teligioridis.dev
   signingkey = 0xF8CB5782955395B6
 [credential]
 	helper = store
