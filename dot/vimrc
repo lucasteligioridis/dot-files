@@ -24,28 +24,27 @@ filetype plugin on
 filetype plugin indent on
 
 " Features
-Plug 'scrooloose/nerdtree'                                        " File tree browser
-Plug 'w0rp/ale'                                                   " Code linter
+Plug 'neoclide/coc.nvim', {'branch': 'release'}                   " coc.nvim autocomplete
+Plug 'dense-analysis/ale'                                         " Code linter
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'                    " Syntax highlighting file tree
+Plug 'scrooloose/nerdtree'                                        " File tree browser
 Plug 'Xuyuanp/nerdtree-git-plugin'                                " Git for NerdTree
 Plug 'jistr/vim-nerdtree-tabs'                                    " NerdTree independent of tabs
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Install fzf for user
 Plug 'junegunn/fzf.vim'                                           " Fzf vim plugin
-Plug 'neoclide/coc.nvim', {'branch': 'release'}                   " coc.nvim autocomplete
-Plug 'majutsushi/tagbar'                                          " Tag bar
+Plug 'antoinemadec/coc-fzf'
+Plug 'preservim/tagbar'                                          " Tag bar
 
 " Small utilities
-Plug 'takac/vim-hardtime'                                         " Hardcore vim
 Plug 'christoomey/vim-tmux-navigator'                             " Naviagte between tmux seamlessly
 Plug 'tmux-plugins/vim-tmux-focus-events'                         " Enable tmux focused events
-Plug 'airblade/vim-gitgutter'                                     " Git integration
+Plug 'kopischke/vim-fetch'
 
 " Efficiency
-Plug 'godlygeek/tabular'                                          " Better tab
-Plug 'easymotion/vim-easymotion'                                  " Move around vim faster
-Plug 'junegunn/vim-easy-align'                                    " Align text
 Plug 'junegunn/vim-peekaboo'                                      " Register extender
-Plug 'jiangmiao/auto-pairs'                                       " Auto pairs
+Plug 'easymotion/vim-easymotion'
+Plug 'haya14busa/incsearch.vim'
+Plug 'haya14busa/incsearch-easymotion.vim'
 
 " Languages
 Plug 'sheerun/vim-polyglot'                                       " Better language pack
@@ -54,7 +53,6 @@ Plug 'hashivim/vim-terraform'                                     " Syntax for t
 Plug 'ekalinin/Dockerfile.vim'                                    " Syntax for docker
 Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-rails'
-Plug 'ruby-formatter/rufo-vim'
 
 " tpope
 Plug 'tpope/vim-surround'                                         " Operate on surrounding
@@ -75,9 +73,7 @@ Plug 'Yggdroot/indentLine'                                        " Show indente
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'junegunn/seoul256.vim'
-Plug 'reedes/vim-pencil'
 Plug 'rhysd/vim-grammarous'
-Plug 'jceb/vim-orgmode'
 
 call plug#end()
 
@@ -134,9 +130,6 @@ au BufWritePre * :%s/\s\+$//e
 " put cursor back where it was last time when re-opening a file
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
-" enable syntax entire file
-autocmd BufEnter * :syntax sync fromstart
-
 " set dash as a word boundary
 set iskeyword-=-
 
@@ -149,17 +142,6 @@ set undofile
 " Automatically create directory for undo if it does not exist
 if !isdirectory(expand('~').'/.vim/undo')
   !mkdir -p $HOME/.vim/undo
-endif
-
-" Backup
-
-" turn on backup
-set backup
-set backupdir=$HOME/.vim/tmp/
-
-" Automatically create directory for tmp if it does not exist
-if !isdirectory(expand('~').'/.vim/tmp')
-  !mkdir -p $HOME/.vim/tmp
 endif
 
 " Swap
@@ -186,14 +168,6 @@ highlight TabLine       ctermfg=green ctermbg=None cterm=None
 highlight TabLineFill   ctermfg=white ctermbg=None cterm=None
 highlight TabLineSel    ctermfg=202
 
-" Grammar checking
-" let g:grammarous#default_comments_only_filetypes = {
-"             \ '*' : 1, 'help' : 0, 'markdown' : 0,
-"             \ }
-
-" Enable hard modeline
-let g:hardtime_default_on = 0
-
 " ============================================================================
 " Shorctuts & key bindings
 
@@ -211,33 +185,6 @@ set ttimeoutlen=0
 
 " Remap leader key
 let mapleader = "\<Space>"
-
-" move entire pane one line at a time
-map <S-Up> <C-y>
-map <S-Down> <C-e>
-inoremap <S-Up> <C-x><C-y>
-inoremap <S-Down> <C-x><C-e>
-
-" Map Ctrl-Backspace to delete the previous word in insert mode
-map  <C-W>
-imap  <C-W>
-map <C-BS> <C-W>
-imap <C-BS> <C-W>
-
-" Get a list of yanks and paste
-nnoremap <silent> <leader>y  :<C-u>CocList -A --normal yank<cr>
-
-" re-launch vim as sudo
-cmap w!! w !sudo tee % >/dev/null
-
-" Tab settings
-map  <silent><C-T>     :tabnew<CR>i
-nmap <silent><C-T>     :tabnew<CR>i
-imap <silent><C-T>     <Esc>:tabnew<CR>i
-imap <silent><S-Left>  <Esc>:tabp<CR>
-map  <silent><S-Left>  <Esc>:tabp<CR>
-imap <silent><S-Right> <Esc>:tabn<CR>
-map  <silent><S-Right> <Esc>:tabn<CR>
 
 " quit/exit shortcuts fat fingers
 cabbrev Q q
@@ -428,36 +375,37 @@ let g:indentLine_char = '▏'
 " Move modified -----------------------
 let g:move_key_modifier = 'A-S'
 
-" Vim easymotion ----------------------
-" type `l` and match `l`&`L`
-let g:EasyMotion_smartcase = 1
-" disable default mappings
-let g:EasyMotion_do_mapping = 0
-" Smartsign (type `3` and match `3`&`#`)
-let g:EasyMotion_use_smartsign_us = 1
-" Jump to first match with enter & space
-let g:EasyMotion_enter_jump_first = 1
-let g:EasyMotion_space_jump_first = 1
+" Vim easymotion -----------------------
+function! s:incsearch_config(...) abort
+  return incsearch#util#deepextend(deepcopy({
+  \   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
+  \   'keymap': {
+  \     "\<CR>": '<Over>(easymotion)'
+  \   },
+  \   'is_expr': 0
+  \ }), get(a:, 1, {}))
+endfunction
+
+map , <Plug>(easymotion-prefix)
+
+" <Leader>f{char} to move to {char}
+map  <Leader>f <Plug>(easymotion-bd-f)
+nmap <Leader>f <Plug>(easymotion-overwin-f)
 
 " s{char}{char} to move to {char}{char}
 nmap s <Plug>(easymotion-overwin-f2)
 
-" Gif config
-map  / <Plug>(easymotion-sn)
-omap / <Plug>(easymotion-tn)
+" Move to line
+map <Leader>L <Plug>(easymotion-bd-jk)
+nmap <Leader>L <Plug>(easymotion-overwin-line)
 
-" These `n` & `N` mappings are options. You do not have to map `n` & `N` to EasyMotion.
-" Without these mappings, `n` & `N` works fine. (These mappings just provide
-" different highlight method and have some other features )
-map n <Plug>(easymotion-next)
-map N <Plug>(easymotion-prev)
+" Move to word
+map  <Leader>w <Plug>(easymotion-bd-w)
+nmap <Leader>w <Plug>(easymotion-overwin-w)
 
-" Vim easyalign
-" Start interactive EasyAlign in visual mode (e.g. vipga)
-xmap ga <Plug>(EasyAlign)
-
-" Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
+noremap <silent><expr> /  incsearch#go(<SID>incsearch_config())
+noremap <silent><expr> ?  incsearch#go(<SID>incsearch_config({'command': '?'}))
+noremap <silent><expr> g/ incsearch#go(<SID>incsearch_config({'is_stay': 1}))
 
 " Goyo
 autocmd! User GoyoEnter Limelight
