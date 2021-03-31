@@ -208,7 +208,7 @@ fh() {
   local cols sep f_history
   cols=$(( COLUMNS / 3 ))
   sep='{::}'
-  f_history=$(find "${f_path}"/*.default-release -iname places.sqlite)
+  f_history=$(find "${f_path}"/*.default-release-* -iname places.sqlite)
   cp -f "${f_history}" /tmp/h
   sqlite3 -separator ${sep} /tmp/h \
     "select substr(title, 1, ${cols}), url
