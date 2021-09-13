@@ -150,3 +150,6 @@
 	helper = store
 [commit]
 	gpgSign = true
+	verbose = true
+[fetch]
+  prune = true
