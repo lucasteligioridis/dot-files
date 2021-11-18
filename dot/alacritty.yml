@@ -186,7 +186,7 @@ mouse:
   triple_click: { threshold: 300 }
   hide_when_typing: false
 
-  url:
+  hints:
     # Default:
     #   - (macOS) open
     #   - (Linux) xdg-open
