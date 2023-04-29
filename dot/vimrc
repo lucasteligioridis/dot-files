@@ -486,6 +486,7 @@ let g:coc_global_extensions = [
       \ 'coc-git',
       \ 'coc-go',
       \ 'coc-json',
+      \ 'coc-prettier',
       \ 'coc-markdownlint',
       \ 'coc-pairs',
       \ 'coc-sh',
@@ -493,11 +494,9 @@ let g:coc_global_extensions = [
       \ 'coc-solargraph',
       \ 'coc-vimlsp',
       \ 'coc-yaml',
+      \ 'coc-pyright',
       \ 'coc-yank',
       \ ]
-
-" if hidden is not set, TextEdit might fail.
-set hidden
 
 " Better display for messages
 set cmdheight=2
@@ -519,12 +518,12 @@ set nowritebackup
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
       \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-function! s:check_back_space() abort
+function! CheckBackspace() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
@@ -534,7 +533,7 @@ inoremap <silent><expr> <c-space> coc#refresh()
 
 " Make <CR> auto-select the first completion item and notify coc.nvim to
 " format on enter, <cr> could be remapped by other vim plugin
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 " Use K to show documentation in preview window.
@@ -591,6 +590,9 @@ nmap <leader>ac  <Plug>(coc-codeaction)
 " Apply AutoFix to problem on the current line.
 nmap <leader>qf  <Plug>(coc-fix-current)
 
+" Run the Code Lens action on the current line.
+nmap <leader>cl  <Plug>(coc-codelens-action)
+
 " Map function and class text objects
 " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
 xmap if <Plug>(coc-funcobj-i)
@@ -639,7 +641,7 @@ nnoremap <silent><nowait> <space>c  :<C-u>CocFzfList commands<cr>
 " Find symbol of current document.
 nnoremap <silent><nowait> <space>o  :<C-u>CocFzfList outline<cr>
 " Search workspace symbols.
-nnoremap <silent><nowait> <space>s  :<C-u>CocFzfList -I symbols<cr>
+nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
 " Do default action for next item.
 nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 " Do default action for previous item.
@@ -648,6 +650,9 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent><nowait> <space>p  :<C-u>CocFzfListResume<CR>
 " Get a list of yanks and paste
 nnoremap <silent> <leader>y  :<C-u>CocList -A --normal yank<cr>
+
+"
+nnoremap <leader>prw :CocSearch <C-R>=expand("<cword>")<CR><CR>
 
 " Python ---------------------------
 let g:python_host_prog = "~/.asdf/installs/python/2.7.18/bin/python"
