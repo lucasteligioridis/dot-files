@@ -26,18 +26,19 @@ filetype plugin indent on
 " Features
 Plug 'neoclide/coc.nvim', {'branch': 'release'}                   " coc.nvim autocomplete
 Plug 'dense-analysis/ale'                                         " Code linter
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'                    " Syntax highlighting file tree
-Plug 'scrooloose/nerdtree'                                        " File tree browser
+Plug 'johnstef99/vim-nerdtree-syntax-highlight'                    " Syntax highlighting file tree
+Plug 'preservim/nerdtree'                                         " File tree browser
 Plug 'Xuyuanp/nerdtree-git-plugin'                                " Git for NerdTree
 Plug 'jistr/vim-nerdtree-tabs'                                    " NerdTree independent of tabs
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Install fzf for user
 Plug 'junegunn/fzf.vim'                                           " Fzf vim plugin
 Plug 'antoinemadec/coc-fzf'
 Plug 'preservim/tagbar'                                          " Tag bar
+Plug 'editorconfig/editorconfig-vim'
+Plug 'godlygeek/tabular'
 
 " Small utilities
 Plug 'christoomey/vim-tmux-navigator'                             " Naviagte between tmux seamlessly
-Plug 'tmux-plugins/vim-tmux-focus-events'                         " Enable tmux focused events
 Plug 'kopischke/vim-fetch'
 
 " Efficiency
@@ -53,6 +54,8 @@ Plug 'hashivim/vim-terraform'                                     " Syntax for t
 Plug 'ekalinin/Dockerfile.vim'                                    " Syntax for docker
 Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-rails'
+Plug 'fladson/vim-kitty'
+Plug 'tsandall/vim-rego'
 
 " tpope
 Plug 'tpope/vim-surround'                                         " Operate on surrounding
@@ -61,6 +64,10 @@ Plug 'tpope/vim-commentary'                                       " Comment out 
 Plug 'tpope/vim-fugitive'                                         " Git integration
 Plug 'tpope/vim-rhubarb'                                          " Enables fugitive to open Git URLs
 Plug 'tpope/vim-abolish'                                          " Flexible search
+
+" Git
+Plug 'moll/vim-bbye' " optional dependency
+Plug 'aymericbeaumet/vim-symlink'
 
 " Appearance
 Plug 'joshdick/onedark.vim'                                       " Onedark color scheme
@@ -179,11 +186,11 @@ endif
 
 " Time out mapping after 100ms
 " Shorten default to time to update swap files and gutter plugins
-"set ttimeout
+set ttimeout
 set timeoutlen=550
-set ttimeoutlen=0
-
-" Remap leader key
+"set ttimeoutlen=0 " wtf is this doing
+"
+"" Remap leader key
 let mapleader = "\<Space>"
 
 " quit/exit shortcuts fat fingers
