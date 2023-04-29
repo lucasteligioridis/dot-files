@@ -6,4 +6,3 @@ fmt='#{session_id}:|#S|(#{session_attached} attached)'
 	| fzf -q "$" --reverse --prompt "switch session: " -1 \
 	| cut -d ":" -f1 \
 	| xargs tmux switch-client -t
-}
