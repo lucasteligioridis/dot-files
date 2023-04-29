@@ -74,6 +74,33 @@ export LESS_TERMCAP_so=$'\E[01;44;33m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;32m'
 
+# FZF <3
+export FZF_COMPLETION_TRIGGER="z"
+#export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --no-messages -g "!{.git,*.swp,**/.terraform}/*" 2> /dev/null'
+export FZF_DEFAULT_OPTS="
+  --multi
+  --ansi
+  --reverse"
+export FZF_TMUX_OPTS="-p80%,60%"
+export FZF_CTRL_R_OPTS="
+  --preview 'echo {}'
+  --preview-window down:3:wrap
+  --bind 'ctrl-/:toggle-preview'
+  --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
+  --color header:italic
+  --header 'CTRL-Y to copy command into clipboard / CTRL-/ to toggle preview'"
+
+# Use external programs if they are found on the system
+if command -v fd > /dev/null; then
+  export FZF_DEFAULT_COMMAND="fd --strip-cwd-prefix --type f --hidden --follow --exclude .git"
+  export FZF_ALT_C_COMMAND="fd --strip-cwd-prefix --type d --hidden --follow --exclude .git"
+  export FZF_CTRL_T_COMMAND="fd --strip-cwd-prefix --type f --type d --hidden --follow --exclude .git"
+fi
+
+command -v bat  > /dev/null && export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always {}'"
+command -v blsd > /dev/null && export FZF_ALT_C_COMMAND="blsd"
+command -v tree > /dev/null && export FZF_ALT_C_OPTS="--preview 'tree -C {}'"
+
 # Binds ---------------------------
 stty werase undef
 bind -x '"\C-f": fvim'
@@ -117,28 +144,53 @@ tm() {
 
 # search current directory for all files recursively and open with vim
 fvim() {
-  local IFS=$'\n'
-  local files
-  mapfile -t files < <(rg --files --hidden | fzf --height 40%)
+  local files; mapfile -t files < <(
+    FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS} --preview 'bat -n --color=always {}'" \
+    fzf-tmux "${FZF_TMUX_OPTS}"
+  )
   [[ -n "${files[*]}" ]] && history -s ${EDITOR} -p "${files[@]}" && ${EDITOR} -p "${files[@]}"
 }
 
 # vim with fasd and fzf
 vf() {
-  local files
-  mapfile -t files < <(fasd -Rfl "$1" | fzf --height 40% -1 -0 --no-sort +m)
+  local fasd_results; fasd_results=$(fasd -Rfl "$*") || return
+
+  # If only a single entry has been found, then just open otherwise launch fzf
+  if [ "$(wc -l <<< "${fasd_results}" | tr -d ' ')" == "1" ]; then
+    files="${fasd_results[*]}"
+  else
+    files=$(echo "${fasd_results[*]}" | fzf-tmux "${FZF_TMUX_OPTS}" --)
+  fi
   [[ -n "${files[*]}" ]] && history -s ${EDITOR} -p "${files[@]}" && ${EDITOR} -p "${files[@]}"
 }
 
 # search for string in all files recursively in current directory and open with vim
 vfind() {
-  local files
   if [ "$#" -lt 1 ]; then echo "Supply string to search for!"; return 1; fi
   printf -v search "%q" "$*"
-  exclude=".config,.git,.lock,**/.terraform"
-  rg_command='rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --no-messages --color "always" -g "!{'${exclude}'}/*"'
-  mapfile -t files < <(eval "${rg_command}" "${search}" | fzf --ansi --multi --reverse | awk -F ':' '{print $1":"$2":"$3}')
-  [[ -n "${files[*]}" ]] && history -s ${EDITOR} -p "${files[@]}" && ${EDITOR} -p "${files[@]}"
+  rg_command="rg --column --line-number --no-heading --color=always --smart-case "
+  local files; files=$(
+    FZF_DEFAULT_COMMAND="${rg_command} '${search}' || true" \
+      fzf --bind "change:reload:${rg_command} {q} || true" \
+          --ansi --disabled --query "${search}" \
+          --delimiter : \
+          --preview 'bat --style=full --color=always --highlight-line {2} {1}' \
+          --preview-window '~3:+{2}+3/2' | awk -F ':' '{print $1":"$2":"$3}'
+  )
+  [[ -n "${files[*]}" ]] && history -s ${EDITOR} -p ${files[*]} && ${EDITOR} -p ${files[*]}
+}
+
+pods() {
+  FZF_DEFAULT_COMMAND="kubectl get pods --all-namespaces" \
+    fzf --info=inline --layout=reverse --header-lines=1 --border \
+    --prompt "$(kubectl config current-context | sed 's/-context$//')> " \
+    --header $'╱ Enter (kubectl exec) ╱ CTRL-O (open log in editor) ╱ CTRL-R (reload) ╱\n\n' \
+    --bind ctrl-/:toggle-preview \
+    --bind 'enter:execute:kubectl exec -it --namespace {1} {2} -- bash > /dev/tty' \
+    --bind 'ctrl-o:execute:${EDITOR:-vim} <(kubectl logs --namespace {1} {2}) > /dev/tty' \
+    --bind 'ctrl-r:reload:$FZF_DEFAULT_COMMAND' \
+    --preview-window up:follow \
+    --preview 'kubectl logs --follow --tail=100000 --namespace {1} {2}' "$@"
 }
 
 # diff git commit
@@ -175,7 +227,7 @@ gh() {
 # search git commits and launch interactively
 gir() {
   git log --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "${@}" |
-  _fzf_down --ansi --no-sort --reverse --multi \
+  fzf --height 50% "$@" --border --ansi --no-sort --reverse --multi \
     --preview 'grep -o "[a-f0-9]\{7,\}" <<< {} | xargs git show --color=always | head -200' |
   grep -o "[a-f0-9]\\{7,\\}" |
   xargs -I% git rebase -i %~
@@ -194,26 +246,42 @@ gopen() {
   "${os_open}" "${commit}" >/dev/null 2>/dev/null
 }
 
+# Quickly open CI pipeline page for the current directories build page
+ci() {
+  repo_root="$(git rev-parse --show-toplevel)"
+
+  if [ -f "${repo_root}/.circleci/config.yml" ]; then
+    url="https://app.circleci.com/pipelines"
+    endpoint=$(git config --local remote.origin.url | sed 's/@git//' | sed 's/\.git//' | sed 's/\.com//' | tr ':' '/')
+  fi
+
+  "${os_open}" "${url}/${endpoint}" >/dev/null 2>/dev/null
+}
+
 # search latest 30 branches and checkout
 branch() {
-  local branches branch
-  branches=$(git branch --all) &&
-  branch=$(echo "${branches}" | fzf-tmux -d $(( 2 + $(wc -l <<< "${branches}") )) +m) &&
-  git checkout "$(echo "${branch}" | sed "s/.* //" | sed "s#remotes/[^/]*/##")"
+  local tags; tags=$(git tag | awk '{print "\x1b[31;1mtag\x1b[m\t" $1}') || return
+  local branches; branches=$(
+    git branch --all | grep -v HEAD             |
+    sed "s/.* //"    | sed "s#remotes/[^/]*/##" |
+    sort -u          | awk '{print "\x1b[34;1mbranch\x1b[m\t" $1}') || return
+  local target; target=$(
+    (echo "$tags"; echo "$branches") | sed '/^$/d' |
+    _fzf_down --no-hscroll --reverse --ansi +m -d "\t" -n 2 -q "$*") || return
+  git checkout $(echo "$target" | awk '{print $2}')
 }
 
 # search firefox history and launch in browser
 fh() {
-  local cols sep f_history
-  cols=$(( COLUMNS / 3 ))
-  sep='{::}'
-  f_history=$(find "${f_path}"/*.default-release-* -iname places.sqlite)
+  local cols; cols=$(( COLUMNS / 3 ))
+  local sep; sep='{::}'
+  local f_history; f_history=$(find "${f_path}"/*.default-release -iname places.sqlite)
   cp -f "${f_history}" /tmp/h
   sqlite3 -separator ${sep} /tmp/h \
     "select substr(title, 1, ${cols}), url
      from moz_places order by last_visit_date desc" |
   awk -F ${sep} '{printf "%-'${cols}'s  \x1b[36m%s\x1b[m\n", $1, $2}' |
-  fzf --ansi --multi --query="!localhost " | sed 's#.*\(https*://\)#\1#' | xargs "${os_open}" > /dev/null 2> /dev/null
+  fzf --ansi --multi --tiebreak=index --no-hscroll | sed 's#.*\(https*://\)#\1#' | xargs "${os_open}" > /dev/null 2> /dev/null
 }
 
 fuzzpass() {
