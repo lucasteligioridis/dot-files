@@ -1,40 +1,40 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euo pipefail
 
-source=${1:-}
-context=""
-symbol=""
+# tmux colors
 red="#[fg=#e06c75]"
 green="#[fg=#98c379]"
 blue="#[fg=#61afef]"
 nc="#[fg=default]"
 
+# emojis/symbols
+warn_emoji=" "
+kube_emoji="${blue}☸${nc}"
+
 # only display prompt if using a KUBECONFIG or within tmux status.
 # Reason is so we dont flood information in redundant places,
 # the tmux status will be the main source of truth and the tmux pane
 # should only display if we are overriding the current context within the shell.
-if [[ -z "${KUBECONFIG:-}" && "${source}" != "tmux" ]]; then
+if [[ -z "${KUBECONFIG:-}" && "${TMUX_BASHRC:-false}" == true ]]; then
   tmux set -p @kube_prompt 0
   exit 0
 fi
 
-# grab context from config, this is way fast to fetch
+# grab context from config, this is way faster to fetch
 kube_config="${KUBECONFIG:-${HOME}/.kube/config}"
 context=$(grep "current-context:" "${kube_config}" | sed "s/current-context: //") || exit 0
 
 # default kube status
-kube_symbol="${blue}ﴱ${nc}"
-kube_severity="${green}${context}${nc}"
+kube_severity="${kube_emoji} ${green}${context:-}${nc}"
 
 # change color if in production
-if [[ "${context}" =~ "prod" ]]; then
-  kube_severity="${red} ${context} ${nc}"
+if [[ "${context}" =~ "prd" ]]; then
+  kube_severity="${red}${warn_emoji}${context}${warn_emoji}${nc}"
 fi
 
-# format message
-if [ "${source}" == "tmux" ]; then
-  symbol=" "
-  echo -e "${symbol}${kube_symbol} ${kube_severity}"
+# format message depending on which tmux display (pane vs bottom panel)
+if [ "${TMUX_BASHRC:-false}" == "true" ]; then
+  tmux set -p @kube_prompt "${kube_severity}"
 else
-  tmux set -p @kube_prompt "${symbol}${kube_symbol} ${kube_severity}"
+  echo -e " ${kube_severity}"
 fi
