@@ -125,6 +125,7 @@
   # 'git push' will push the current branch to its tracking branch
   # the usual default is to push all branches
   default = upstream
+  autosetupremote = true
 [core]
   autocrlf = false
   editor = vim
@@ -147,9 +148,11 @@
   email = lucas@teligioridis.dev
   signingkey = 0x4166BF6A6016BE68
 [credential]
-	helper = store
+	helper = osxkeychain
 [commit]
 	gpgSign = true
 	verbose = true
 [fetch]
   prune = true
+[init]
+	defaultBranch = main
