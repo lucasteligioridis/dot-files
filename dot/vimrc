@@ -760,9 +760,11 @@ augroup END
 
 " Fugitive --------------------------
 set statusline+=%{FugitiveStatusline()}
+noremap <Leader>gb :GBrowse!<CR> :GBrowse<CR>
 
 " Terraform -------------------------
-let g:terraform_align=0
+let g:terraform_align=1
+let g:terraform_fmt_on_save=1
 let g:terraform_completion_keys = 1
 autocmd FileType terraform setlocal commentstring=//%s
 
@@ -786,6 +788,7 @@ autocmd FileType dockerfile setlocal autoindent expandtab   tabstop=4 shiftwidth
 " File type formatting
 au BufRead,BufNewFile *.tf         setlocal filetype=terraform
 au BufRead,BufNewFile *.tfvars     setlocal filetype=terraform
+au BufRead,BufNewFile *.tfbackend  setlocal filetype=terraform
 au BufRead,BufNewFile *.parameters setlocal filetype=json
 au BufRead,BufNewFile *.tags       setlocal filetype=json
 au BufRead,BufNewFile *.template   setlocal filetype=yaml
