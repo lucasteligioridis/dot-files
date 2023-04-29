@@ -331,17 +331,6 @@ command_init() {
   fi
 }
 
-get_ps1() {
-  local exit_status=$?
-  tmux set -p @status "${exit_status}"
-  [ -f "${HOME}/bin/tmux-kube-prompt" ] && "${HOME}/bin/tmux-kube-prompt"
-  # shorten path
-  # shellcheck disable=SC2001
-  PS1X=$(sed "s:\\([^/\\.]\\)[^/]*/:\\1/:g" <<< "${PWD/#$HOME/\~}")
-  # declare prompt
-  PS1="${TEAL}${BOLD}${PS1X}${NC}$("${HOME}/bin/git-prompt")${BOLD}\\n${ORANGE}λ ${NC}"
-}
-
 # Helpers -----------------------
 _fzf_down() {
   fzf --height 50% "$@" --border
@@ -371,3 +360,17 @@ if [ -d ~/.bash.d ]; then
     source "${file}"
   done
 fi
+
+get_ps1() {
+  local exit_status=$?
+  if [ -n "${TMUX}" ]; then
+    tmux set -p @status "${exit_status}"
+    # set kubernetes prompt at top of tmux pane
+    [ -f "${HOME}/bin/tmux-kube-prompt" ] && TMUX_BASHRC=true "${HOME}/bin/tmux-kube-prompt"
+  fi
+  # shorten path
+  # shellcheck disable=SC2001
+  PS1X=$(sed "s:\\([^/\\.]\\)[^/]*/:\\1/:g" <<< "${PWD/#$HOME/\~}")
+  # declare prompt
+  PS1="${TEAL}${BOLD}${PS1X}${NC}$("${HOME}/bin/git-prompt")${BOLD}\\n${ORANGE}λ ${NC}"
+}
