@@ -140,6 +140,9 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 " set dash as a word boundary
 set iskeyword-=-
 
+" split replacements in another window to view all changes
+set inccommand=split
+
 " Undo
 
 " permanent undo history of files
@@ -199,20 +202,37 @@ cabbrev Q! q!
 cabbrev Q1 q!
 cabbrev q1 q!
 cabbrev Wq wq
-map Y y$
 map Q :q<CR>
 
 " save shortcuts
 map <C-s> :w!<CR>
 imap <C-s> <ESC>:w!<CR>
 
-" fzf
+" move left and right tabs easily
+nmap <C-l> gt
+nmap <C-h> gT
+
+" hjkl default behaviour is line wrap aware
+"nnoremap j gj
+"nnoremap k gk
+"xnoremap j gj
+"xnoremap k gk
+
+" ============================================================================
+" FZF <3
+
+let $FZF_DEFAULT_OPTS .= ' --inline-info --multi'
+
+" All files
+command! -nargs=? -complete=dir AF
+  \ call fzf#run(fzf#wrap(fzf#vim#with_preview({
+  \   'source': 'fd --strip-cwd-prefix --type f --hidden --follow --exclude .git --no-ignore . '.expand(<q-args>)
+  \ })))
+
 let g:fzf_action = {
   \ 'ctrl-t': 'tab split',
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
-
-let g:fzf_layout = { 'down': '~20%' }
 
 " Take colours from colour scheme
 let g:fzf_colors = {
@@ -230,49 +250,44 @@ let g:fzf_colors = {
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
 
-" Hide statusline and mode indicator in fzf
-autocmd! FileType fzf
-autocmd FileType fzf set laststatus=0 noshowmode noruler
-  \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
-
-let g:fzf_nvim_statusline = 0 " disable statusline overwriting
+" Define how the fzf pane opens
+if exists('$TMUX')
+  let g:fzf_layout = { 'tmux': '-p90%,60%' }
+else
+  let g:fzf_layout = { 'down': '~40%' }
+endif
 
 " Smart shortcuts
-nnoremap <silent> <leader><space> :Files<CR>
-nnoremap <silent> <leader>a :Buffers<CR>
+nnoremap <silent> <expr> <Leader><Leader> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Files\<cr>"
+nnoremap <silent> <leader><Enter> :Buffers<CR>
 nnoremap <silent> <leader>A :Windows<CR>
 nnoremap <silent> <leader>; :BLines<CR>
 nnoremap <silent> <leader>. :Lines<CR>
 nnoremap <silent> <leader>o :BTags<CR>
 nnoremap <silent> <leader>O :Tags<CR>
 nnoremap <silent> <leader>? :History<CR>
-nnoremap <silent> <leader>/ :execute 'Rg ' . input('Rg/')<CR>
-
-nnoremap <silent> K :call SearchWordWithRg()<CR>
-vnoremap <silent> K :call SearchVisualSelectionWithRg()<CR>
 nnoremap <silent> <leader>gl :Commits<CR>
 nnoremap <silent> <leader>ga :BCommits<CR>
 nnoremap <silent> <leader>ft :Filetypes<CR>
+nnoremap <silent> <Leader>`  :Marks<CR>
+nnoremap <silent> <Leader>rg :Rg<CR>
 
+imap <c-x><c-k> <plug>(fzf-complete-word)
+imap <c-x><c-j> <plug>(fzf-complete-path)
+inoremap <expr> <c-x><c-d> fzf#vim#complete#path('blsd')
 imap <C-x><C-f> <plug>(fzf-complete-file-ag)
 imap <C-x><C-l> <plug>(fzf-complete-line)
 
-" Use ripgrep to search for strings
-function! SearchWordWithRg()
-  execute 'Rg' expand('<cword>')
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let options = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  let options = fzf#vim#with_preview(options, 'right', 'ctrl-/')
+  call fzf#vim#grep(initial_command, 1, options, a:fullscreen)
 endfunction
 
-function! SearchVisualSelectionWithRg() range
-  let old_reg = getreg('"')
-  let old_regtype = getregtype('"')
-  let old_clipboard = &clipboard
-  set clipboard&
-  normal! ""gvy
-  let selection = getreg('"')
-  call setreg('"', old_reg, old_regtype)
-  let &clipboard = old_clipboard
-  execute 'Rg' selection
-endfunction
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
 
 " Paste below line
 nmap <F4> o<ESC>p
