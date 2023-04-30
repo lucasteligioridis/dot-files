@@ -1,0 +1,52 @@
+{
+  "suggest.triggerAfterInsertEnter": false,
+  "suggest.timeout": 500,
+  "suggest.noselect": false,
+  "suggest.detailField":"abbr",
+  "suggest.snippetIndicator": "🌟",
+  "suggest.triggerCompletionWait": 50,
+  "diagnostic.errorSign": "●",
+  "diagnostic.warningSign": "●",
+  "diagnostic.displayByAle": false,
+  "diagnostic.refreshOnInsertMode": true,
+  "coc.preferences.formatOnSaveFiletypes": ["markdown"],
+  "languageserver": {
+    "golang": {
+      "command": "gopls",
+      "rootPatterns": ["go.work", "go.mod", ".vim/", ".git/", ".hg/"],
+      "filetypes": ["go"],
+      "initializationOptions": {
+        "usePlaceholders": true
+      }
+    },
+    "bash": {
+      "command": "bash-language-server",
+      "args": ["start"],
+      "filetypes": [
+        "sh",
+        "bash"
+      ]
+    },
+    "dockerfile": {
+      "command": "docker-langserver",
+      "filetypes": ["dockerfile"],
+      "args": ["--stdio"]
+    },
+    "terraform": {
+      "command": "terraform-ls",
+      "args": ["serve"],
+      "filetypes": [
+        "terraform",
+        "tf"
+      ],
+      "initializationOptions": {},
+      "settings": {}
+    },
+    "efm": {
+      "command": "efm-langserver",
+      "args": [],
+      "filetypes": ["vim", "eruby", "markdown"]
+    }
+  },
+  "snippets.ultisnips.pythonPrompt": false
+}
