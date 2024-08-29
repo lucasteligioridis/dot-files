@@ -76,7 +76,7 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 
 # FZF <3
 export FZF_COMPLETION_TRIGGER="z"
-#export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --no-messages -g "!{.git,*.swp,**/.terraform}/*" 2> /dev/null'
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --no-messages -g "!{.git,*.swp,**/.terraform}/*" 2> /dev/null'
 export FZF_DEFAULT_OPTS="
   --multi
   --ansi
