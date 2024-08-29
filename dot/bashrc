@@ -331,12 +331,6 @@ _branch_name() {
 # autocomplete targets in Makefile
 [ -f Makefile ] && complete -W "$(grep -oE '^[a-zA-Z0-9_-]+:([^=]|$)' Makefile | sed 's/[^a-zA-Z0-9_-]*$//')" make
 
-# disable software flow control (dont freeze terminal with C-S)
-stty -ixon
-
-# start fzf
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-
 # custom bash files
 if [ -d ~/.bash.d ]; then
   for file in ~/.bash.d/*; do
@@ -357,3 +351,6 @@ get_ps1() {
   # declare prompt
   PS1="${TEAL}${BOLD}${PS1X}${NC}$("${HOME}/bin/git-prompt")${BOLD}\\n${ORANGE}λ ${NC}"
 }
+
+# start fzf
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
