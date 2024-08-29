@@ -655,8 +655,7 @@ nnoremap <silent> <leader>y  :<C-u>CocList -A --normal yank<cr>
 nnoremap <leader>prw :CocSearch <C-R>=expand("<cword>")<CR><CR>
 
 " Python ---------------------------
-let g:python_host_prog = "~/.asdf/installs/python/2.7.18/bin/python"
-let g:python3_host_prog = "~/.asdf/installs/python/3.10.0/bin/python"
+let $PATH = $HOME . '/.local/share/mise/shims:' . $PATH
 
 " Golang ---------------------------
 " disable vim-go :GoDef short cut (gd)
