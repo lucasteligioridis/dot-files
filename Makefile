@@ -5,10 +5,10 @@ CONFIG_FILES = $(shell find config -type f -print)
 BIN_FILES = $(shell ls -p1 bin/)
 
 .PHONY: all
-all: uninstall-all install-dots install-bins
+all: uninstall-all install-dots install-bins install-configs
 
 .PHONY: uninstall-all
-uninstall-all: uninstall-dots uninstall-bins
+uninstall-all: uninstall-dots uninstall-bins uninstall-configs
 
 .PHONY: install-dots
 install-dots: uninstall-dots
