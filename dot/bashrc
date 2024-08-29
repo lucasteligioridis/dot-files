@@ -151,19 +151,6 @@ fvim() {
   [[ -n "${files[*]}" ]] && history -s ${EDITOR} -p "${files[@]}" && ${EDITOR} -p "${files[@]}"
 }
 
-# vim with fasd and fzf
-vf() {
-  local fasd_results; fasd_results=$(fasd -Rfl "$*") || return
-
-  # If only a single entry has been found, then just open otherwise launch fzf
-  if [ "$(wc -l <<< "${fasd_results}" | tr -d ' ')" == "1" ]; then
-    files="${fasd_results[*]}"
-  else
-    files=$(echo "${fasd_results[*]}" | fzf-tmux "${FZF_TMUX_OPTS}" --)
-  fi
-  [[ -n "${files[*]}" ]] && history -s ${EDITOR} -p "${files[@]}" && ${EDITOR} -p "${files[@]}"
-}
-
 # search for string in all files recursively in current directory and open with vim
 vfind() {
   if [ "$#" -lt 1 ]; then echo "Supply string to search for!"; return 1; fi
@@ -339,10 +326,6 @@ _fzf_down() {
 _branch_name() {
   git rev-parse --abbrev-ref HEAD 2> /dev/null
 }
-
-# Custom init apps ------------------------
-command_init fasd --init auto
-command_init hub alias -s
 
 # Misc ------------------------------------
 # autocomplete targets in Makefile
