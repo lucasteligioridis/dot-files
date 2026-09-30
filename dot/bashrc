@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Defaults from /etc/skel/.bashrc ------------
-export SHELL="/opt/homebrew/bin/bash"
+export SHELL="/opt/homebrew/bin/zsh"
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
@@ -148,7 +148,7 @@ fvim() {
     FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS} --preview 'bat -n --color=always {}'" \
     fzf-tmux "${FZF_TMUX_OPTS}"
   )
-  [[ -n "${files[*]}" ]] && history -s ${EDITOR} -p "${files[@]}" && ${EDITOR} -p "${files[@]}"
+  [[ -n "${files[*]}" ]] && history -s ${EDITOR} "${files[@]}" && ${EDITOR} "${files[@]}"
 }
 
 # search for string in all files recursively in current directory and open with vim
@@ -164,7 +164,7 @@ vfind() {
           --preview 'bat --style=full --color=always --highlight-line {2} {1}' \
           --preview-window '~3:+{2}+3/2' | awk -F ':' '{print $1":"$2":"$3}'
   )
-  [[ -n "${files[*]}" ]] && history -s ${EDITOR} -p ${files[*]} && ${EDITOR} -p ${files[*]}
+  [[ -n "${files[*]}" ]] && history -s ${EDITOR} ${files[*]} && ${EDITOR} ${files[*]}
 }
 
 pods() {
@@ -354,3 +354,5 @@ get_ps1() {
 
 # start fzf
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+#eval "$(starship init bash)"

@@ -15,6 +15,7 @@ brew install \
   bat \
   coreutils \
   fasd \
+  fd \
   fzf \
   git \
   gnupg \
@@ -33,6 +34,7 @@ brew install \
   shellcheck \
   tig \
   tmux \
+  tree-sitter-cli \
   tree \
   wget \
   ykman

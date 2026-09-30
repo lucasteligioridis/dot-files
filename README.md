@@ -16,4 +16,4 @@
 - TMUX
 
 ### Editors
-- Vim
+- Neovim (Lua, lazy.nvim, native LSP) — `config/nvim`, see `config/nvim/README.md`
