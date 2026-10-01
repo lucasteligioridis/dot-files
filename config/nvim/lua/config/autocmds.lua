@@ -44,6 +44,16 @@ autocmd("BufReadPost", {
   end,
 })
 
+-- Start new commit messages in insert mode (not amends, which already have a message)
+autocmd("FileType", {
+  pattern = "gitcommit",
+  callback = function(ev)
+    if vim.api.nvim_buf_get_lines(ev.buf, 0, 1, false)[1] == "" then
+      vim.cmd.startinsert()
+    end
+  end,
+})
+
 autocmd("TextYankPost", {
   callback = function()
     vim.hl.on_yank({ timeout = 150 })
